@@ -1,0 +1,160 @@
+main {
+    display: flex;
+    background-color: var(--background-color);
+    align-items: center;
+    justify-content: center;
+    /* height: 150vh; */
+    margin: 4rem 0;
+}
+
+.form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    width: 90%;
+    min-height: 62.5rem;
+    padding: 4rem 0;
+    border-radius: 1rem;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+}
+
+form {
+    width: 90%;
+}
+
+/* formulario titulos */
+.titulos {
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+    border-bottom: 3px solid var(--secondary-color);
+    width: 100%;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+input[type=date],input[type=number],input[type=text],input[type=email],input[type=time] {
+    width: 16rem;
+    border: 3px solid var(--secondary-color);
+    border-radius: 50px;
+    height: 2rem;
+    padding: 1rem 1rem;
+}
+
+select {
+    width: 16rem;
+    border: 3px solid var(--secondary-color);
+    /* border: none; */
+    border-radius: 50px;
+    font-size: 14px;
+    height: 2.4rem;
+    padding: 0 1rem;
+    font-size: 1.1rem;
+}
+
+input:focus,select:focus {
+    outline: none;
+}
+
+/* organizacion */
+.datos-personales, .informacion-laboral {
+    margin-top: 1.6rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-items: center;
+} 
+
+.izq, .centro, .der {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 15rem;
+}
+
+#upload {
+    border: 0;
+    display: none;
+}
+
+.bottom {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-items: center;
+    grid-template-rows: auto;
+    /* height: 12rem; */
+}
+
+.rol-perfil{
+    margin-top: 1.6rem;
+}
+
+.upload-btn img{
+    height: 20px;
+    width: 20px;
+}
+
+.upload-foto {
+    width: 16rem;
+}
+
+.upload-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    border: 3px solid var(--secondary-color);
+    border-radius: 50px;
+    height: 2.3rem;
+    padding: 1rem 1rem;
+    justify-content: space-between;
+}
+
+.upload-btn:hover {
+    cursor: pointer;
+}
+
+/* botones */
+
+.botones {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    width: 100%;
+}
+
+.button {
+    border: 0;
+    border-radius: 25px;
+    height: 2.5rem;
+    width: 10rem;
+    color: var(--background-color);
+    background-color: var(--secondary-color);
+    font-weight: bold;
+    align-items: center;
+    margin: 0 4px;
+}
+
+.button:hover{
+    cursor: pointer;
+    background-color: var(--secondary-color-dark);
+}
+
+#guardar {
+    background: var(--main-color);
+    /* margin-left: 20px; */
+}
+
+#guardar:hover {
+    background: var(--main-color-dark);
+}
+
+a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}

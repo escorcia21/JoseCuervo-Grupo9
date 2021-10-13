@@ -1,0 +1,31 @@
+
+@media screen and (max-width: 980px){
+    .titulos {
+        text-align: center;
+    }
+    .datos-personales, .informacion-laboral, .bottom {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media screen and (max-width: 660px){
+    .datos-personales, .informacion-laboral, .bottom {
+        grid-template-columns: 1fr;
+    }
+
+    input[type=date],input[type=number],input[type=text],input[type=email],input[type=time]{
+        width: 14rem;
+    }
+
+    select {
+        width: 14rem;
+    }
+
+    .bottom {
+        height: 12rem;
+    }
+
+    .upload-foto {
+        width: 14rem;
+    }
+}

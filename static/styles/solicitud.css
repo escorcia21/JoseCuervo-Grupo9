@@ -1,0 +1,55 @@
+/* text area */
+.cometarios {
+    margin-top: 1.6rem;
+    width: 100%;
+    height: 20rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+textarea {
+    width: 95%;
+    height: 300px;
+    resize: none;
+    border: 2px solid var(--secondary-color);
+    border-radius: 25px;   
+    padding: 2rem; 
+}
+
+textarea:focus {
+    outline: none;
+}
+
+a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+@media screen and (max-width: 980px){
+    .titulos {
+        text-align: center;
+    }
+    .datos-personales, .bottom {
+        grid-template-columns: 1fr 1fr;
+    }
+    .bottom {
+        height: 4rem;
+    }
+}
+
+@media screen and (max-width: 660px){
+    .datos-personales, .bottom {
+        grid-template-columns: 1fr;
+    }
+
+    input[type=date],input[type=number],input[type=text],input[type=email],input[type=time]{
+        width: 14rem;
+    }
+
+    .upload-foto  {
+        width: 14rem;
+    }
+}

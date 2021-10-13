@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
+/* 1.25rem == 1 rem = 16px => 1.25rem =20px */
+
+/* variables de color */
+:root {
+    --main-color: #EB1818;
+    --main-color-dark: #ca1313;
+    --background-color: #F1F1F1;
+    --secondary-color: #4A4A4A;
+    --secondary-color-dark: #424242;
+    --validation-color: rgb(55, 255, 115);
+    --white: white;
+}
+
+/* propiedades aplicadas a todas las paginas */
+* {
+    font-size: 16px;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: var(--secondary-color);
+}
+
+/* scrollbar */
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+    
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 20px;
+    /* width: 10px; */
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 20px;
+    /* width: 10px; */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

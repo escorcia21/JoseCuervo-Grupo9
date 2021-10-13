@@ -1,0 +1,174 @@
+body {
+    background-color: var(--background-color);
+}
+
+
+.top {
+    height: 80px;
+    width: 100%;
+    background-color: var(--white);
+}
+
+.navegacion {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 50px;
+    align-items: center;
+    height: 100%;
+}
+
+/* logo */
+#logo {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+#logo span {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--main-color);
+}
+
+/* menu */
+.cuenta {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    /* width: 20.6rem; */
+    /* justify-content: space-between; */
+}
+
+.cuenta div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.menu:hover #iconT{
+    transform: rotate(0deg);
+    transition: .4s;
+}
+
+.menu:hover #iconT{
+    transform: rotate(0deg);
+    transition: .4s;
+}
+
+.menu:hover {
+    cursor: pointer;
+}
+
+#iconT {
+    height: 25px;
+    width: 25px;
+    transform: rotate(90deg);
+    transition: .4s;
+    margin-left: 6px;
+}
+
+/* perfil */
+#perfil {
+    height: 61px;
+    width: 61px;
+    /* background-color: var(--main-color); */
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 6px;
+}
+
+#nombre {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+#rol {
+    font-size: 1rem;
+    text-align: center;
+    /* margin: -0.7rem 0 0 0; */
+    margin-top:-0.7rem;
+    letter-spacing: 0.15rem;
+}
+
+/* drop down */
+.menu {
+    position: relative;
+    /* display: inline-block; */
+    height: 100%;
+}
+
+.desplegable {
+    display: none;
+    position: absolute;
+    background-color: white;
+    /* min-width: 160px; */
+    width: 100%;
+    /* box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); */
+    z-index: 1;
+}
+
+.desplegable a {
+    font-size: 1.2rem;
+    color: var(--secondary-color);
+    padding: 12px 16px;
+    text-decoration: none;
+    text-align: center;
+    display: block;
+}
+
+.desplegable a:hover {
+    background-color: var(--background-color);
+}
+
+.menu:hover .desplegable {
+    display: block;
+}
+
+/* responsive */
+@media screen and (max-width: 940px) {
+    .cuenta div {
+        display: none;
+        
+    }
+
+    .navegacion {
+        padding: 0 30px;
+    }
+}
+
+@media screen and (max-width: 511px) {
+    #logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+    
+    #logo span{
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+}
+
+@media screen and (max-width: 360px) {
+    #logo {
+        font-size: 1rem;
+        font-weight: 700;
+    }
+    
+    #logo span{
+        font-size: 1rem;
+    }
+    
+    #iconT {
+        height: 18px;
+        width: 18px;
+    }
+
+    #perfil {
+        height: 50px;
+        width: 50px;
+    }
+
+    .desplegable a {
+        font-size: 1rem;
+    }
+}

@@ -1,0 +1,84 @@
+{% extends "layout.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/formularios.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/solicitud.css') }}">
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="form-container">
+        <form action="" method="get">
+            <h1>Petición de actualización</h1>
+            <p class="titulos">Datos personales</p>
+            <div class="datos-personales">
+                <div class="izq">
+                    <div>
+                        <p class="titulo">Nombres</p>
+                        <input type="text">
+                    </div>
+                    <div>
+                        <p class="titulo">Fecha de nacimiento</p>
+                        <input type="date" name="" id="">
+                    </div>
+                    <div>
+                        <p class="titulo">Estado civil</p>
+                        <input type="text">
+                    </div>
+                </div>
+                <div class="centro">
+                    <div>
+                        <p class="titulo">Apellidos</p>
+                        <input type="text">
+                    </div>
+                    <div>
+                        <p class="titulo">Edad</p>
+                        <input type="number" name="" id="">
+                    </div>
+                    <div>
+                        <p class="titulo">Email</p>
+                        <input type="email">
+                    </div>
+                </div>
+                <div class="der">
+                    <div>
+                        <p class="titulo">Cedula</p>
+                        <input type="number">
+                    </div>
+                    <div>
+                        <p class="titulo">Celular</p>
+                        <input type="number" name="" id="">
+                    </div>
+                    <div>
+                        <p class="titulo">Dirección</p>
+                        <input type="text">
+                    </div>
+                </div>
+            </div>
+            <p class="titulos">perfil</p>
+            <div class="rol-perfil">
+                <div class="bottom">
+                    <div class="upload-foto">
+                        <p class="titulo">Foto de perfil</p>
+                        <label for="upload" id="lable-upload" class="upload-btn">
+                            <span id="txt">Sube una foto</span>
+                            <img src="{{ url_for('static', filename='imgs/upload.svg') }}" alt="">
+                        </label>
+                        <input type="file" name="upload" id="upload">
+                    </div>
+                </div>
+            </div>
+            <p class="titulos">Cometarios</p>
+            <div class="cometarios">
+                <textarea name="" id="" cols="30" rows="10">
+
+                </textarea>
+            </div>
+            <div class="botones">
+                <a id="volver" class="button" href="/empleado">VOLVER</a>
+                <button id="guardar" class="button">SOLICITAR</button>
+            </div>
+        </form>
+    </div>
+</main>
+{% endblock %}

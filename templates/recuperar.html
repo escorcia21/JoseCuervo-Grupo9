@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/normalize.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/logins.css') }}">
+    <title>JoseCuervo</title>
+<body>
+    <div class="container">        
+        <form action="/restablecer" method="GET">
+            <img src="{{ url_for('static', filename='imgs/logojc.png') }}" alt="Logo" class="logo">
+            <h3>Usuario</h3>
+            <input type="text"><br>
+            <h3>Email</h3>
+            <input type="email"><br>
+            <input class="button" type="submit" value="RECUPERAR">
+        </form>
+        <div class="info">
+            <a target="_blank" href="/politicas">Política de privacidad y condiciones</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,119 @@
+{% extends "layout.html" %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/vistaAdmin.css') }}">
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="tabla-usuarios">
+        <div class="tabla-usuarios-top">
+            <label>Usuarios</label>
+            <div class="search">
+                <input type="text" name="" onkeyup="buscar()" id="search-box" placeholder="Cedula">
+            </div>
+        </div>
+
+        <ul id="tabla">
+            <li>
+                <div class="user">
+                    <img src="{{ url_for('static', filename='imgs/img.jpg') }}" alt="" class="foto-perfil">
+
+                    <div class="user__info">
+                        <p id="Tnombre">Oscar correa</p>
+                        <p>10094560</p>
+                    </div>
+
+                    <div class="buttons">
+                        <button class="view">
+                            <img src="{{ url_for('static', filename='imgs/eye.svg') }}" alt="">
+                        </button>
+
+                        <button class="delete">
+                            <img src="{{ url_for('static', filename='imgs/delete.svg') }}" alt="">
+                        </button>
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="tabla-usuario-boton">
+            <a class="button" href="/registroSuper">AÑADIR</a>
+        </div>
+    </div>
+    <div class="info-usuarios">
+        <div class="top-info">
+            <img src="{{ url_for('static', filename='imgs/dafault.png') }}" alt="">
+            <div class="usuario-info-ocupacion">
+                <p class="nombre">Nombre</p>
+                <p class="cedula">Cedula</p>
+                <p class="ocupacion">Ocupacion</p>
+            </div>
+        </div>
+        <div class="formulario">
+            <div class="izq">
+                <div>
+                    <p class="titulo">Fecha de nacimiento</p>
+                    <p>hghjghj</p>
+                </div>
+                <div>
+                    <p class="titulo">Edad</p>
+                    <p>bkjnnk</p>
+                </div>
+                <div>
+                    <p class="titulo">Estado civil</p>
+                    <p>kln</p>
+                </div>
+                <div>
+                    <p class="titulo">Celular</p>
+                    <p></p>
+                </div>
+                <div>
+                    <p class="titulo">Dirección</p>
+                    <p></p>
+                </div>
+                <div>
+                    <p class="titulo">Email</p>
+                    <p></p>
+                </div>
+            </div>
+            <div class="der">
+                <div>
+                    <p class="titulo">Fecha de ingreso</p>
+                    <p></p>
+                </div>
+                <div>
+                    <p class="titulo">Fecha de termino</p>
+                    <p></p>
+                </div>
+                <div>
+                    <p class="titulo">Tipo de contrato</p>
+                    <p></p>
+                </div>
+                <div>
+                    <p class="titulo">Salario</p>
+                    <p></p>
+                </div>
+                <div>
+                    <p class="titulo">Rol</p>
+                    <p></p>
+                </div>
+                <div>
+                    <p class="titulo">Disponibilidad</p>
+                    <p></p>
+                </div>
+            </div>
+        </div>
+        <div class="info-usuarios-buttons">
+            <a id="editar" class="button" href="/actualizar/usuario">
+                <img src="{{ url_for('static', filename='imgs/editar.png') }}" alt="">
+                <p>EDITAR</p>
+            </a>
+            <a id="calificar" href="/calificar" class="button">
+                <img src="{{ url_for('static', filename='imgs/check.png') }}" alt="">
+                <p>CALIFICAR</p>
+            </a>
+        </div>
+    </div>
+</main>
+{% endblock %}

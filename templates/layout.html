@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" href="../static/styles/normalize.css"> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/normalize.css') }}">
+    <!-- <link rel="stylesheet" href="../static/styles/layout.css"> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/layout.css') }}">
+    {% block head %}
+    {% endblock %}
+    <title>JoseCuervo</title>
+</head>
+<body>
+    
+    <nav class="top">
+        <div class="navegacion">
+            <label id="logo">JOSE<span>CUERVO</span></label>
+            <div class="menu"> 
+                <div class="cuenta">
+                    <img src="{{ url_for('static', filename='imgs/img.jpg') }}" alt="foto" id="perfil">
+                    <div>
+                        <label id="nombre">CARLOS ESCORCIA</label>
+                        <label id="rol">SUPERADMINISTRADOR</label>
+                    </div>
+                    <img src="{{ url_for('static', filename='imgs/downtriangle.svg') }}" alt="icono" id="iconT">
+                </div>
+                <div class="desplegable">
+                    <a href="#">Mi cuenta</a>
+                    <a href="#">Salir</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    {% block content %}
+    {% endblock %}
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
