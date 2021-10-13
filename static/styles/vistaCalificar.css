@@ -1,0 +1,260 @@
+main{
+    width: 100%;
+    min-height: calc(100vh -80px);
+    display: flex;
+    justify-content: center;
+    margin: 4rem 0;
+}
+
+.info-Admin{
+    background-color: white;
+    border-radius: 1rem;
+    width: 90%;
+    box-shadow: rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px;
+
+}
+
+.Adm-info {
+    display: flex;
+    background: var(--secondary-color);
+    border-radius: 1rem 1rem 0 0;
+    width: 100%;
+    height: 12rem;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 4rem;
+}
+
+.Adm-info img {
+    background: white;
+    height: 8rem;
+    width: 8rem;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.Adm-info p {
+    text-align: right;
+    color: white;
+}
+
+#Enombre{
+    font-size: 1.5rem;
+    font-weight: 700;
+
+}
+
+.cedula{
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-top: -10px;
+
+}
+
+.ocupacion{
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-top: -10px;
+
+}
+
+.titulo {
+    color: var(--secondary-color);
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+.izq p {
+    height: 2rem;
+    padding: 20px 0;
+}
+
+.izq p + p{
+    margin-top: -10px;
+}
+
+
+.formulario {
+    font-weight: 700;
+    width: 90%;
+}
+
+/* comentarios */
+.form_comentarios {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 98%;
+}
+
+
+#caja {
+    height: 300px;
+    width: 90%;
+    resize: none;
+    border: 2px solid var(--secondary-color);
+    border-radius: 25px;
+    padding: 1rem;
+}
+
+#caja:focus {
+    outline: none;
+}
+
+/* formulario botones */
+.admin-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+/* personalizar los botones */
+.button {
+    border: 0;
+    border-radius: 25px;
+    height: 2.5rem;
+    width: 10rem;
+    color: var(--background-color);
+    background-color: var(--secondary-color);
+    font-weight: bold;
+    align-items: center;
+    margin: 0 4px;
+}
+
+.button:hover{
+    cursor: pointer;
+    background-color: var(--secondary-color-dark);
+}
+
+#calificar {
+    background: var(--main-color);
+   
+}
+
+#calificar:hover {
+    background: var(--main-color-dark);
+}
+
+
+/* organizacion */
+.calificar {
+    margin-top: 20px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-items: center;
+    padding: 0 20px;
+}
+
+input,select {
+    margin-top: 2rem;
+    width: 90%;
+    height: 2rem;
+    border: 2px solid var(--secondary-color);
+    border-radius: 25px;
+    padding: 0 1rem;
+
+}
+
+input:focus {
+    outline: none; 
+}
+
+select:focus {
+    outline: none; 
+}
+
+#calificaciones{
+    height: 95%;
+    list-style-type: none;
+    overflow-y: scroll;
+    padding-right: 6px;
+    width: 90%;
+}
+
+
+li{
+    min-height: 150px;
+    background-color:#F1F1F1;
+    margin-bottom: 1rem;
+    padding: 0 1rem;
+}
+
+li:nth-child(2n+0) {
+    background-color: #D6D6D6;
+}
+
+li p{
+    color:var(--secondary-color);
+    
+}
+
+.fecha{
+    display: flex;
+    height: 30%;
+    border-bottom: 2px solid #707070;
+    justify-content: center;
+    align-items: center;
+}
+
+.comentarios{
+    text-align: center;
+    height: 70%;
+}
+
+.calificaciones{
+    width: 100%;
+    height: 100%;
+    font-size: 500rem;
+    font-weight: 500;
+    
+}
+
+
+@media screen and (max-width: 880px){
+
+    .calificar {
+        grid-template-columns: 1fr 1fr ;
+    }
+
+}
+
+@media screen and (max-width: 660px){
+
+    .calificar {
+        grid-template-columns: 1fr ;
+    }
+
+}
+
+@media screen and (max-width: 570px){
+
+    .Adm-info img {
+        display: none;
+    }
+
+    .Admin-info-ocupacion{
+        display: flex;     
+        flex-direction: column;     
+        align-items: flex-start;
+    }
+
+    .button {
+        width: 7rem;
+    }
+
+    .Adm-info {
+        padding: 0 1.5rem;
+    }
+    
+}
+
