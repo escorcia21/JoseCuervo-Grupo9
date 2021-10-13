@@ -1,0 +1,57 @@
+body{
+    background-color: var(--background-color);
+}
+
+label{
+    display: flex;
+    height: 80px;
+    width: 100vw;
+    background-color:white;
+    justify-content: center;
+    align-items: center;
+}
+
+#logo {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+#logo span {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--main-color);
+}
+
+
+div{
+    display: flex;
+    background-color: white;
+    border-radius: 20px;
+    padding: 0 0 40px 0;
+    width: 90%;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    margin-top: 20px;
+}
+
+h2{
+    display: flex;
+    justify-content: center;
+    font-size: 1.5rem;
+    padding: 20px 0;
+}
+
+h1{
+    width: 90%;
+    text-align: justify;
+}
+
+@media screen and (max-width: 560px){
+    h2{
+        font-size: 1.2rem;
+        text-align: center;
+        padding: 10px;
+    }
+
+}

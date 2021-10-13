@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/vistaEmpleado.css') }}">
+{% endblock %}
+
+
+{% block content %}
+<main>
+    <div class="info-empleado">
+        <div class="empleado-info">
+            <img src="{{ url_for('static', filename='imgs/dafault.png') }}" alt="">
+            <div class="Admin-info-ocupacion">
+                <p id="Enombre">Oscar Correa</p>
+                <p class="cedula">102453612</p>
+                <p class="ocupacion">Programador</p>
+            </div>
+        </div>
+        <div class="info-calificacion">
+            
+            <div class="izq">
+                <div>
+                    <p class="titulo">Fecha de nacimiento</p>
+                    <p></p>
+                </div>
+                <div>
+                    <p class="titulo">Edad</p>
+                    <p></p>
+                </div>
+                <div>
+                    <p class="titulo">Estado civil</p>
+                    <p></p>
+                </div>
+                <div>
+                    <p class="titulo">Celular</p>
+                    <p></p>
+                </div>
+                <div>
+                    <p class="titulo">Dirección</p>
+                    <p></p>
+                </div>
+                <div>
+                    <p class="titulo">Email</p>
+                    <p></p>
+                </div>
+            </div>
+            <div class="der">
+                <div>
+                    <p class="titulo">Fecha de ingreso</p>
+                    <p></p>
+                </div>
+                <div>
+                    <p class="titulo">Fecha de termino</p>
+                    <p></p>
+                </div>
+                <div>
+                    <p class="titulo">Tipo de contrato</p>
+                    <p></p>
+                </div>
+                <div>
+                    <p class="titulo">Salario</p>
+                    <p></p>
+                </div>
+                <div>
+                    <p class="titulo">Rol</p>
+                    <p></p>
+                </div>
+                <div>
+                    <p class="titulo">Disponibilidad</p>
+                    <p></p>
+                </div>
+            </div>
+
+            <ul id="calificaciones">
+                <li>
+                    <div class="calificaciones">
+                        <p class="fecha">octubre 2021</p><p class="comentarios">Excelente desempeño</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="calificaciones">
+                        <p class="fecha">octubre 2021</p><p class="comentarios">Excelente desempeño</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="calificaciones">
+                        <p class="fecha">octubre 2021</p><p class="comentarios">Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit, animi, corrupti consequatur nihil quae minus omnis nobis voluptatem nemo sapiente placeat unde velit maxime voluptate eveniet porro ratione fugiat dolorum?</p>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+       
+        <div class="empleado-buttons">
+            <a id="actualizacion" href="/solicitud" class="button">ACTUALIZACIÓN</a>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</main>
+</main>
+{% endblock %}
