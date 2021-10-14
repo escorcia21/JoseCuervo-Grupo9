@@ -8,6 +8,6 @@ Este proyecto esta hecho con html, css, java script y flask.
 ## Integrantes
 - Carlos Escorcia Suevis (escorcia21)
 - Maria Isabel Diaz (mipoveda)
-- Leonardo Corona Torres (escorcia21)
+- Leonardo Corona Torres (lcoronat)
 - Carlos De La Cruz (carlosd0322)
-- Jorge Bastidas Zabala (carlosd0322)
+- Jorge Bastidas Zabala (joanb1)
