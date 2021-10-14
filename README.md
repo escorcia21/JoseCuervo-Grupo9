@@ -1,6 +1,6 @@
 # Jose Cuervo NRC:35 Equipo 9
 
-> [![MinTic](sources\MinTIC.png)](https://mintic.gov.co/portal/inicio/) [![MinTic](sources\UN.png)](https://www.uninorte.edu.co/)
+> [![MinTic](https://github.com/escorcia21/JoseCuervo-Grupo9/blob/master/sources/MinTIC.png) [![MinTic](sources\UN.png)](https://github.com/escorcia21/JoseCuervo-Grupo9/blob/master/sources/UN.png)
 
 ## Proyecto
 Este es un proyecto realizado en MinTic en el curso de Desarrollo de software impartido por la Universidad del Norte, hecho por el Grupo 35 - Equipo 9, en el cual se presenta un proyecto sobre gestión de empleados en la empresa Jose cuervo (empresa ficticia propuesta para el ejercicio).
@@ -20,17 +20,17 @@ Version 1.0: Actualmente el proyecta esta en fase de desarrollo, es decir, solo 
 ## Vistas
 
 ### Login
-![Login](sources\login.png)
+![Login](https://github.com/escorcia21/JoseCuervo-Grupo9/blob/master/sources/login.png)
 
 
 ### Dashboard administrativo
-![Dashboard](sources\dashboard.png)
+![Dashboard](https://github.com/escorcia21/JoseCuervo-Grupo9/blob/master/sources/dashboard.png)
 
 ### Estilo de formularios
-![Formularios](sources\formularios.png)
+![Formularios](https://github.com/escorcia21/JoseCuervo-Grupo9/blob/master/sources/formularios.png)
 
 ### Vista empleado
-![Empleado](sources\empleado.png)
+![Empleado](https://github.com/escorcia21/JoseCuervo-Grupo9/blob/master/sources/empleado.png)
 
 ### Peticion de actualización de datos (Empleado)
-![Petición](sources\peticion.png)
+![Petición](https://github.com/escorcia21/JoseCuervo-Grupo9/blob/master/sources/peticion.png)
