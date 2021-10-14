@@ -1,6 +1,6 @@
 # Jose Cuervo NRC:35 Equipo 9
 
-> [![MinTic](https://github.com/escorcia21/JoseCuervo-Grupo9/blob/master/sources/MinTIC.png) [![MinTic](sources\UN.png)](https://github.com/escorcia21/JoseCuervo-Grupo9/blob/master/sources/UN.png)
+> [![MinTic](https://github.com/escorcia21/JoseCuervo-Grupo9/blob/master/sources/MinTIC.png)](https://mintic.gov.co/portal/inicio/) [![MinTic](https://github.com/escorcia21/JoseCuervo-Grupo9/blob/master/sources/UN.png)](https://www.uninorte.edu.co/)
 
 ## Proyecto
 Este es un proyecto realizado en MinTic en el curso de Desarrollo de software impartido por la Universidad del Norte, hecho por el Grupo 35 - Equipo 9, en el cual se presenta un proyecto sobre gestión de empleados en la empresa Jose cuervo (empresa ficticia propuesta para el ejercicio).
