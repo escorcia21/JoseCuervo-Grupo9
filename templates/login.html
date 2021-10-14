@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- {{ url_for('static', filename='styles/vistaAdmin.css') }} -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/normalize.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+    <title>JoseCuervo</title>
+</head>
+<body>
+    <video  muted autoplay loop>
+        <source src="{{ url_for('static', filename='imgs/videoinicio.mp4') }}" type="video/mp4">
+    </video>
+
+    <div class="container">
+        <form action="/dashboard">
+            <div class="imgcontainer">
+                <img src="{{ url_for('static', filename='imgs/logojc.png') }}" alt="Logo" class="logo">
+            </div>
+            <h3>Usuario</h3>
+            <input type="text"><br>
+            <h3>Contraseña</h3>
+            <input type="password"><br>
+            <div class="datos">
+                <input type="checkbox" id="recordar" ><label for="recordar" class="lbl"></label><label id="rdatos">Recordar datos</label>
+            </div>
+            <a href="/recuperar">¿Has olvidado tu contraseña?</a><br>
+            <input class="button" type="submit" value="INICIAR SESIÓN">
+        </form>
+        <div class="info">
+            <a target="_blank" href="/politicas" >Política de privacidad y condiciones</a>
+        </div>
+    </div>
+</body>
+</html>
