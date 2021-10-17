@@ -8,14 +8,14 @@
 <main>
     <div class="tabla-usuarios">
         <div class="tabla-usuarios-top">
-            <label>Usuarios</label>
+            <label>{{ target }}</label>
             <div class="search">
                 <input type="text" name="" onkeyup="buscar()" id="search-box" placeholder="Cedula">
             </div>
         </div>
 
         <ul id="tabla">
-            <li>
+            <!-- <li>
                 <div class="user">
                     <img src="{{ url_for('static', filename='imgs/img.jpg') }}" alt="" class="foto-perfil">
 
@@ -34,7 +34,31 @@
                         </button>
                     </div>
                 </div>
+            </li> -->
+
+            {% for r in row %}
+            <li>
+                <div class="user">
+                    <img src="{{ url_for('static', filename='imgs/img.jpg') }}" alt="" class="foto-perfil">
+
+                    <div class="user__info">
+                        <p id="Tnombre">{{r["nombre"]}} {{r["apellido"]}}</p>
+                        <p>{{r["CC"]}}</p>
+                    </div>
+
+                    <div class="buttons">
+                        <button class="view" name="ver" onclick="usuario()">
+                            <p class="CC">{{r["CC"]}}</p>
+                            <img src="{{ url_for('static', filename='imgs/eye.svg') }}" alt="">
+                        </button>
+
+                        <button class="delete">
+                            <img src="{{ url_for('static', filename='imgs/delete.svg') }}" alt="">
+                        </button>
+                    </div>
+                </div>
             </li>
+            {% endfor %}
         </ul>
 
         <div class="tabla-usuario-boton">

@@ -15,14 +15,14 @@
     </video>
 
     <div class="container">
-        <form action="/dashboard">
+        <form method="post">
             <div class="imgcontainer">
                 <img src="{{ url_for('static', filename='imgs/logojc.png') }}" alt="Logo" class="logo">
             </div>
             <h3>Usuario</h3>
-            <input type="text"><br>
+            <input type="text" name="form-usuario"><br>
             <h3>Contraseña</h3>
-            <input type="password"><br>
+            <input type="password" name="form-contraseña"><br>
             <div class="datos">
                 <input type="checkbox" id="recordar" ><label for="recordar" class="lbl"></label><label id="rdatos">Recordar datos</label>
             </div>
