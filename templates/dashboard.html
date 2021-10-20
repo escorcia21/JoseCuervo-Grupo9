@@ -47,14 +47,13 @@
                     </div>
 
                     <div class="buttons">
-                        <button class="view" name="ver" onclick="usuario()">
-                            <p class="CC">{{r["CC"]}}</p>
+                        <a class="view" href="{{url_for('buscar',cedula=r['CC'])}}">
                             <img src="{{ url_for('static', filename='imgs/eye.svg') }}" alt="">
-                        </button>
+                        </a>
 
-                        <button class="delete">
+                        <a class="delete">
                             <img src="{{ url_for('static', filename='imgs/delete.svg') }}" alt="">
-                        </button>
+                        </a>
                     </div>
                 </div>
             </li>
@@ -69,71 +68,71 @@
         <div class="top-info">
             <img src="{{ url_for('static', filename='imgs/dafault.png') }}" alt="">
             <div class="usuario-info-ocupacion">
-                <p class="nombre">Nombre</p>
-                <p class="cedula">Cedula</p>
-                <p class="ocupacion">Ocupacion</p>
+                <p class="nombre">{{Unombre}}</p>
+                <p class="cedula">{{cedula}}</p>
+                <p class="ocupacion">{{ocupacion}}</p>
             </div>
         </div>
         <div class="formulario">
             <div class="izq">
                 <div>
                     <p class="titulo">Fecha de nacimiento</p>
-                    <p>hghjghj</p>
+                    <p>{{nacimiento}}</p>
                 </div>
                 <div>
                     <p class="titulo">Edad</p>
-                    <p>bkjnnk</p>
+                    <p>{{edad}}</p>
                 </div>
                 <div>
                     <p class="titulo">Estado civil</p>
-                    <p>kln</p>
+                    <p>{{estado}}</p>
                 </div>
                 <div>
                     <p class="titulo">Celular</p>
-                    <p></p>
+                    <p>{{celular}}</p>
                 </div>
                 <div>
                     <p class="titulo">Dirección</p>
-                    <p></p>
+                    <p>{{direccion}}</p>
                 </div>
                 <div>
                     <p class="titulo">Email</p>
-                    <p></p>
+                    <p>{{email}}</p>
                 </div>
             </div>
             <div class="der">
                 <div>
                     <p class="titulo">Fecha de ingreso</p>
-                    <p></p>
+                    <p>{{ingreso}}</p>
                 </div>
                 <div>
                     <p class="titulo">Fecha de termino</p>
-                    <p></p>
+                    <p>{{termino}}</p>
                 </div>
                 <div>
                     <p class="titulo">Tipo de contrato</p>
-                    <p></p>
+                    <p>{{tipo}}</p>
                 </div>
                 <div>
                     <p class="titulo">Salario</p>
-                    <p></p>
+                    <p>{{salario}}</p>
                 </div>
                 <div>
                     <p class="titulo">Rol</p>
-                    <p></p>
+                    <p>{{Rol}}</p>
                 </div>
                 <div>
                     <p class="titulo">Disponibilidad</p>
-                    <p></p>
+                    <p>{{disponible}}</p>
                 </div>
             </div>
         </div>
         <div class="info-usuarios-buttons">
-            <a id="editar" class="button" href="/actualizar/usuario">
+            <a id="editar"  href="" class="button" >
                 <img src="{{ url_for('static', filename='imgs/editar.png') }}" alt="">
                 <p>EDITAR</p>
             </a>
-            <a id="calificar" href="/calificar" class="button">
+            <a id="calificar" href="" class="button">
                 <img src="{{ url_for('static', filename='imgs/check.png') }}" alt="">
                 <p>CALIFICAR</p>
             </a>

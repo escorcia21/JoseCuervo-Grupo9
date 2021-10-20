@@ -19,11 +19,14 @@ function buscar() {
   }
 }
 
-const input = document.getElementById("upload");
-const txt = document.getElementById("txt");
+// dashboard
+let url = window.location.href.split("/")[4];
+if (url != undefined){
+  //console.log(url)
+  let editar = document.getElementById("editar");
+  let calificar = document.getElementById("calificar");
 
-input.addEventListener("change", ()=> {
-  const path = input.value.split('\\');
-  const file = path[path.length - 1];
-  txt.innerText = file ? file : "Sube una foto";
-});
+  editar.href = `/actualizar/${url}`
+  calificar.href = `/calificar/${url}`
+}
+

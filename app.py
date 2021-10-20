@@ -1,4 +1,4 @@
-from flask import Flask, render_template,request, session
+from flask import Flask, render_template,request, session,flash
 import os
 
 # base de datos
@@ -15,6 +15,8 @@ app = Flask(__name__)
 app.secret_key = os.urandom( 24 )
 
 roles = {1:"SUPERADMINISTRADOR",2:"ADMINISTRADOR",3:"EMPLEADO"}
+disponible = {1:"disponible",0:"no disponible"}
+activo = {1:"activo",0:"no activo"}
 
 
 # inicios de session y contraseña
@@ -40,9 +42,9 @@ def login():
                     cur.execute("SELECT contraseña,rol,nombre,apellido,email FROM usuario WHERE CC = ?", [usuario])
                     row = cur.fetchone()
                     if row is None:
+                        flash("Usuario no encontrado")
                         return render_template("login.html")
                     else:
-                        print("rol:",row[1])
                         clavehash = row[0]
                         if check_password_hash(clavehash,contraseña):
                             session["usuario"] = usuario 
@@ -50,12 +52,15 @@ def login():
                             session["nombre"] = row[2]
                             session["apellido"] = row[3]
                             session["email"] = row[4]
-                            if (int(row[1] == 1)):
+                            if (int(row[1]) == 1 or int(row[1]) == 2):
                                 return redirect("dashboard")
+                            elif (int(row[1]) == 3):
+                                return redirect("empleado")
                         else:
+                            flash("Contraseña invalida")
                             return render_template("login.html")
-            except Error:
-                print(Error)
+            except Error as er:
+                print('SQLite error: %s' % (' '.join(er.args)))
        
 
 @app.route('/recuperar', methods=["POST","GET"])
@@ -100,10 +105,10 @@ def dashboard():
                     cur.execute("SELECT CC,nombre,foto,apellido FROM usuario")
                     row = cur.fetchall()
                     print(row)
-            except Error:
-                print(Error)
+            except Error  as er:
+                print('SQLite error: %s' % (' '.join(er.args)))
 
-            return render_template("dashboard.html",nombre=nombres, rol=rol,target=target, row = row)
+            return render_template("dashboard.html",nombre=nombres, rol=rol,target=target, row = row,Unombre="Nombre",cedula="Cedula",ocupacion="Ocupación")
 
         if request.method == "PUT":
             return render_template("dashboard.html",nombre=session["nombre"], rol=rol)
@@ -162,27 +167,87 @@ def registroSuper():
                     cur = con.cursor()
                     cur.execute("INSERT INTO usuario (CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,contraseña,activo,primera_vez,registrador,apellido,fecha_nacimiento,cargo) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (cedula,nombre,edad,estado_civil,celular,direccion,email,ingreso,termino,tipo,salario,rol,disponibilidad,foto,cedula,1,1,session["email"],apellido,nacimiento,cargo))
                     con.commit()
-                    return redirect("/dashboard")
-            except Error:
-               print(Error)
+            except Error as er:
+                flash("Ocurrio un error")
+                print('SQLite error: %s' % (' '.join(er.args)))
+            return redirect('/registroSuper')
     else:
         return redirect("/")
 
         
     
 
-@app.route('/actualizar/usuario', methods=["PUT","GET"])
-def actualizar_usuario():
+@app.route('/actualizar/<int:cedula>', methods=["POST","GET"])
+def actualizar_usuario(cedula):
     '''
     En esta ruta se podran actualizar usuarios a la base de datos, se debe diligenciar los campos que se desean actualizar. Se podra cancelar con el boton devolver el cual nos regresa al dashboard
     '''
-    return render_template("registroSuper.html",titulo="Actualizar usuario")
 
-@app.route('/calificar', methods=["POST","GET","PUT"])
-def calificar():
+    if "usuario" in session:
+        rol = roles[session["rol"]]
+        nombres = session["nombre"] + " " + session["apellido"]
+        nombres = nombres.upper()
+        if request.method == "GET":
+            try:
+                with sqlite3.connect('joseCuervoDB.db') as con:
+                    con.row_factory = sqlite3.Row 
+                    cur = con.cursor()
+                    cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,cargo FROM usuario WHERE CC=?",[str(cedula)])
+                    usuario = cur.fetchone()
+
+                    if usuario is None:
+                        return redirect(f"/dashboard/{cedula}")
+                    else:
+                        return render_template("registroSuper.html",nombre=nombres, rol=rol,Unombre=usuario["nombre"],apellido=usuario["apellido"],edad=usuario["edad"],cargo=usuario["cargo"],cedula=usuario["CC"],nacimiento=usuario["fecha_nacimiento"],estado=usuario["estado_civil"],celular=usuario["celular"],direccion=usuario["direccion"],email=usuario["email"],ingreso=usuario["fecha_ingreso"],termino=usuario["fecha_termino"],tipo=usuario["tipo_contrato"],salario=usuario["salario"],Rol=usuario["rol"],disponible=disponible[usuario["disponibilidad"]])
+            except Error as er:
+                print('SQLite error: %s' % (' '.join(er.args)))
+        
+        if request.method == "POST":
+            nombre = escape(request.form["nombre"])
+            nacimiento = escape(request.form["nacimiento"])
+            estado_civil = escape(request.form["estado_civil"])
+            apellido = escape(request.form["apellido"])
+            edad = escape(request.form["edad"])
+            email = escape(request.form["email"])
+            #ucedula = escape(request.form["cedula"])
+            celular = escape(request.form["celular"])
+            direccion = escape(request.form["direccion"])
+            ingreso = escape(request.form["ingreso"])
+            cargo = escape(request.form["cargo"])
+            termino = escape(request.form["termino"])
+            salario = escape(request.form["salario"])
+            tipo = escape(request.form["tipo"])
+            udisponibilidad = escape(request.form["disponibilidad"])
+            urol = escape(request.form["select"])
+            foto = escape(request.form["upload"])
+
+            if udisponibilidad.lower() == "disponible":
+                udisponibilidad = 1
+            elif udisponibilidad.lower() == "no disponible":
+                udisponibilidad = 0
+
+            try :
+                with sqlite3.connect('joseCuervoDB.db') as con:
+                    cur = con.cursor()
+                    cur.execute('UPDATE usuario SET nombre=?,edad=?,estado_civil=?,celular=?,direccion=?,email=?,fecha_ingreso=?,fecha_termino=?,tipo_contrato=?,salario=?,rol=?,disponibilidad=?,foto=?,apellido=?,fecha_nacimiento=?,cargo=? WHERE CC=?',(nombre,edad,estado_civil,celular,direccion,email,ingreso,termino,tipo,salario,urol,udisponibilidad,foto,apellido,nacimiento,cargo,cedula))
+                    con.commit()
+                    if con.total_changes > 0:
+                        flash("Actualizado con exito")
+                        return redirect(f"/dashboard/{cedula}")
+                    else:
+                        flash("Ocurrio un error")
+                        return redirect(f"/actualizar/{cedula}")
+            except Error as er:
+                print('SQLite error: %s' % (' '.join(er.args)))
+    else:
+        return redirect("/")
+
+@app.route('/calificar/<int:cedula>', methods=["POST","GET","PUT"])
+def calificar(cedula):
     '''
     En esta ruta se podran agregar calificacion o editar ya existentes , ademas se debe ingresar la fecha y un pequeño comentario con no mas de 100 palabras. Se podra cancelar con el boton devolver el cual nos regresa al dashboard
     '''
+    # INSERT INTO calificaciones_usuario (calificacion,usuario,evaluador,fecha) VALUES (?,?,?,?)
     return render_template("vistacalificar.html")
 
 
@@ -210,6 +275,47 @@ def politicas():
     En esta ruta se podra ver la politica de tratamiento de datos y terminos y condiciones.
     '''
     return render_template("politicas.html")
+
+@app.route("/dashboard/<int:cedula>", methods=['GET'])
+def buscar(cedula):
+    if "usuario" in session:
+        # print(request.path.split('/')[2])
+        rol = roles[session["rol"]]
+        target = "USUARIOS"
+        if session["rol"] == 2:
+            target = "EMPLEADOS"
+
+        if request.method == "GET":
+            # obtener todos los usuarios de la base de datos
+            nombres = session["nombre"] + " " + session["apellido"]
+            nombres = nombres.upper()
+
+            try:
+                with sqlite3.connect('joseCuervoDB.db') as con:
+                    con.row_factory = sqlite3.Row 
+                    cur = con.cursor()
+                    cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,cargo FROM usuario WHERE CC=?",[str(cedula)])
+                    usuario = cur.fetchone()
+
+                    cur.execute("SELECT CC,nombre,foto,apellido FROM usuario")
+                    row = cur.fetchall()
+
+                    if usuario is None:
+                        return redirect("/dashboard")
+                    else:
+                        return render_template("dashboard.html",nombre=nombres, rol=rol,target=target, row = row, Unombre=usuario["nombre"],edad=usuario["edad"],ocupacion=usuario["cargo"],cedula=usuario["CC"],nacimiento=usuario["fecha_nacimiento"],estado=usuario["estado_civil"],celular=usuario["celular"],direccion=usuario["direccion"],email=usuario["email"],ingreso=usuario["fecha_ingreso"],termino=usuario["fecha_termino"],tipo=usuario["tipo_contrato"],salario=usuario["salario"],Rol=roles[usuario["rol"]].lower(),disponible=disponible[usuario["disponibilidad"]])
+            except Error as er:
+                print('SQLite error: %s' % (' '.join(er.args)))
+    else:
+        return redirect("/")
+
+
+@app.route('/logout')
+def logout():
+    if "usuario" in session:
+        session.clear()
+
+    return redirect("/")
 
 if __name__ == "__main__":
     app.run(debug=True)
