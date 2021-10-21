@@ -93,32 +93,36 @@ def dashboard():
             target = "EMPLEADOS"
 
         if request.method == "GET":
-            # obtener todos los usuarios de la base de datos
-            nombres = session["nombre"] + " " + session["apellido"]
-            nombres = nombres.upper()
 
-            try:
-                with sqlite3.connect('joseCuervoDB.db') as con:
-                    con.row_factory = sqlite3.Row 
-                    cur = con.cursor()
-                    if session["rol"] == 2:
-                        cur.execute("SELECT CC,nombre,foto,apellido FROM usuario WHERE CC != ? AND rol = ?",[session["usuario"],3])
-                    else: 
-                        cur.execute("SELECT CC,nombre,foto,apellido FROM usuario WHERE CC != ?",[session["usuario"]])
-                        
-                    row = cur.fetchall()
-            except Error  as er:
-                print('SQLite error: %s' % (' '.join(er.args)))
+            if session["rol"] != 3:
+                # obtener todos los usuarios de la base de datos
+                nombres = session["nombre"] + " " + session["apellido"]
+                nombres = nombres.upper()
 
-            return render_template("dashboard.html",nombre=nombres, rol=rol,target=target, row = row,Unombre="Nombre",cedula="Cedula",sexo="Sexo")
+                try:
+                    with sqlite3.connect('joseCuervoDB.db') as con:
+                        con.row_factory = sqlite3.Row 
+                        cur = con.cursor()
+                        if session["rol"] == 2:
+                            cur.execute("SELECT CC,nombre,foto,apellido FROM usuario WHERE CC != ? AND rol = ?",[session["usuario"],3])
+                        else: 
+                            cur.execute("SELECT CC,nombre,foto,apellido FROM usuario WHERE CC != ?",[session["usuario"]])
+                            
+                        row = cur.fetchall()
+                except Error  as er:
+                    print('SQLite error: %s' % (' '.join(er.args)))
+
+                return render_template("dashboard.html",nombre=nombres, rol=rol,target=target, row = row,Unombre="Nombre",cedula="Cedula",sexo="Sexo")
+            else:
+                return redirect("/empleado")
 
         if request.method == "POST":
             return render_template("dashboard.html",nombre=session["nombre"], rol=rol)
     else:
         return redirect("/")
 
-@app.route('/registroSuper', methods=["POST","GET"])
-def registroSuper():
+@app.route('/registro', methods=["POST","GET"])
+def registro():
     '''
     En esta ruta se podran actualizar usuarios a la base de datos, se debe diligenciar los campos que se desean actualizar, tambien se podra asignar un rol. Se podra cancelar con el boton devolver el cual nos regresa al dashboard
     '''
@@ -337,30 +341,34 @@ def buscar(cedula):
             target = "EMPLEADOS"
 
         if request.method == "GET":
-            # obtener todos los usuarios de la base de datos
-            nombres = session["nombre"] + " " + session["apellido"]
-            nombres = nombres.upper()
 
-            try:
-                with sqlite3.connect('joseCuervoDB.db') as con:
-                    con.row_factory = sqlite3.Row 
-                    cur = con.cursor()
-                    cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=?",[str(cedula)])
-                    usuario = cur.fetchone()
+            if session["rol"] != 3:
+                # obtener todos los usuarios de la base de datos
+                nombres = session["nombre"] + " " + session["apellido"]
+                nombres = nombres.upper()
 
-                    if session["rol"] == 2:
-                        cur.execute("SELECT CC,nombre,foto,apellido FROM usuario WHERE CC != ? AND rol = ?",[session["usuario"],3])
-                    else: 
-                        cur.execute("SELECT CC,nombre,foto,apellido FROM usuario WHERE CC != ?",[session["usuario"]])
+                try:
+                    with sqlite3.connect('joseCuervoDB.db') as con:
+                        con.row_factory = sqlite3.Row 
+                        cur = con.cursor()
+                        cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=?",[str(cedula)])
+                        usuario = cur.fetchone()
 
-                    row = cur.fetchall()
+                        if session["rol"] == 2:
+                            cur.execute("SELECT CC,nombre,foto,apellido FROM usuario WHERE CC != ? AND rol = ?",[session["usuario"],3])
+                        else: 
+                            cur.execute("SELECT CC,nombre,foto,apellido FROM usuario WHERE CC != ?",[session["usuario"]])
 
-                    if usuario is None:
-                        return redirect("/dashboard")
-                    else:
-                        return render_template("dashboard.html",nombre=nombres, rol=rol,target=target, row = row, Unombre=usuario["nombre"],edad=usuario["edad"],sexo=usuario["sexo"],cedula=usuario["CC"],nacimiento=usuario["fecha_nacimiento"],estado=usuario["estado_civil"],celular=usuario["celular"],direccion=usuario["direccion"],email=usuario["email"],ingreso=usuario["fecha_ingreso"],termino=usuario["fecha_termino"],tipo=usuario["tipo_contrato"],salario=usuario["salario"],Rol=roles[usuario["rol"]].lower(),disponible=disponible[usuario["disponibilidad"]])
-            except Error as er:
-                print('SQLite error: %s' % (' '.join(er.args)))
+                        row = cur.fetchall()
+
+                        if usuario is None:
+                            return redirect("/dashboard")
+                        else:
+                            return render_template("dashboard.html",nombre=nombres, rol=rol,target=target, row = row, Unombre=usuario["nombre"],edad=usuario["edad"],sexo=usuario["sexo"],cedula=usuario["CC"],nacimiento=usuario["fecha_nacimiento"],estado=usuario["estado_civil"],celular=usuario["celular"],direccion=usuario["direccion"],email=usuario["email"],ingreso=usuario["fecha_ingreso"],termino=usuario["fecha_termino"],tipo=usuario["tipo_contrato"],salario=usuario["salario"],Rol=roles[usuario["rol"]].lower(),disponible=disponible[usuario["disponibilidad"]])
+                except Error as er:
+                    print('SQLite error: %s' % (' '.join(er.args)))
+            else:
+                return redirect("/empleado")
     else:
         return redirect("/")
 
