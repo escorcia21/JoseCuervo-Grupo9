@@ -3,7 +3,6 @@ main {
     background-color: var(--background-color);
     align-items: center;
     justify-content: center;
-    /* height: 150vh; */
     margin: 4rem 0;
 }
 
@@ -43,7 +42,7 @@ h1 {
 }
 
 input[type=date],input[type=number],input[type=text],input[type=email],input[type=time] {
-    width: 16rem;
+    width: 100%;
     border: 3px solid var(--secondary-color);
     border-radius: 50px;
     height: 2rem;
@@ -51,7 +50,7 @@ input[type=date],input[type=number],input[type=text],input[type=email],input[typ
 }
 
 select {
-    width: 16rem;
+    width: 100%;
     border: 3px solid var(--secondary-color);
     /* border: none; */
     border-radius: 50px;
@@ -66,19 +65,44 @@ input:focus,select:focus {
 }
 
 /* organizacion */
-.datos-personales, .informacion-laboral {
+/* contenedores */
+.informacion-personal, 
+.informacion-laboral,
+.archivos {
+    margin-top: 2rem;
+}
+
+.informacion-personal, 
+.informacion-laboral,
+.archivos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(400px,1fr));
+    justify-items: center;
+}
+
+.field-container {
+    margin-top: .5rem;
+    height: 100%;
+    width: 90%;
+}
+
+.combo, .upload-foto{
+    width: 90%;
+}
+
+/* .datos-personales, .informacion-laboral {
     margin-top: 1.6rem;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     justify-items: center;
-} 
-
+}  */
+/* 
 .izq, .centro, .der {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     height: 15rem;
-}
+} */
 
 #upload {
     border: 0;
@@ -102,9 +126,6 @@ input:focus,select:focus {
     width: 20px;
 }
 
-.upload-foto {
-    width: 16rem;
-}
 
 .upload-btn {
     width: 100%;
@@ -122,7 +143,6 @@ input:focus,select:focus {
 }
 
 /* botones */
-
 .botones {
     display: flex;
     justify-content: center;

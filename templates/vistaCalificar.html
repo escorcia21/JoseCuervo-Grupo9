@@ -12,9 +12,9 @@
         <div class="Adm-info">
             <img src="{{ url_for('static', filename='imgs/dafault.png') }}" alt="">
             <div class="Admin-info-ocupacion">
-                <p id="Enombre">Oscar Correa</p>
-                <p class="cedula">102453612</p>
-                <p class="ocupacion">Programador</p>
+                <p id="Enombre">{{Unombre}}</p>
+                <p class="cedula">{{cedula}}</p>
+                <p class="sexo">{{sexo}}</p>
             </div>
         </div>
         <div class="calificar">
@@ -22,80 +22,73 @@
                 <div class="izq">
                     <div>
                         <p class="titulo">Fecha de nacimiento</p>
-                        <p></p>
+                        <p>{{nacimiento}}</p>
                     </div>
                     <div>
                         <p class="titulo">Edad</p>
-                        <p></p>
+                        <p>{{edad}}</p>
                     </div>
                     <div>
                         <p class="titulo">Estado civil</p>
-                        <p></p>
+                        <p>{{estado}}</p>
                     </div>
                     <div>
                         <p class="titulo">Celular</p>
-                        <p></p>
+                        <p>{{celular}}</p>
                     </div>
                     <div>
                         <p class="titulo">Dirección</p>
-                        <p></p>
+                        <p>{{direccion}}</p>
                     </div>
                     <div>
                         <p class="titulo">Email</p>
-                        <p></p>
+                        <p>{{email}}</p>
                     </div>
                 
                     <div>
                         <p class="titulo">Fecha de ingreso</p>
-                        <p></p>
+                        <p>{{ingreso}}</p>
                     </div>
                     <div>
-                        <p class="titulo">Fecha de termino</p>
-                        <p></p>
+                        <p class="titulo">termino</p>
+                        <p>{{termino}}</p>
                     </div>
                     <div>
                         <p class="titulo">Tipo de contrato</p>
-                        <p></p>
+                        <p>{{tipo}}</p>
                     </div>
                     <div>
                         <p class="titulo">Salario</p>
-                        <p></p>
+                        <p>{{salario}}</p>
                     </div>
                     <div>
                         <p class="titulo">Rol</p>
-                        <p></p>
+                        <p>{{cargo}}</p>
                     </div>
                     <div>
                         <p class="titulo">Disponibilidad</p>
-                        <p></p>
+                        <p>{{disponible}}</p>
                     </div>
                 </div>
             </div>
             <ul id="calificaciones">
+                {% for r in cali %}
                 <li>
                     <div class="calificaciones">
-                        <p class="fecha">octubre 2021</p><p class="comentarios">Excelente desempeño</p>
+                        <p class="fecha">{{r["calificacion"]}} | {{r["fecha"]}}</p>
+                        <p class="comentarios">{{r["comentario"]}}</p>
                     </div>
                 </li>
-                <li>
-                    <div class="calificaciones">
-                        <p class="fecha">octubre 2021</p><p class="comentarios">Excelente desempeño</p>
-                    </div>
-                </li>
-                <li>
-                    <div class="calificaciones">
-                        <p class="fecha">octubre 2021</p><p class="comentarios">Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae fugit repellendus placeat aut officia possimus neque veritatis, nesciunt fuga quod dolorum, aspernatur sint tenetur omnis earum consequuntur similique sed doloribus.</p>
-                    </div>
-                </li>
+                {% endfor %}
             </ul>
             
-            <form action="" class="form_comentarios">
-                <textarea name="" id="caja" placeholder="Comentarios"></textarea>
-                <input type="date" name="" id="">
-                <select name="" id="">
-                    <option value="">Excelente</option>
-                    <option value="">Normal</option>
-                    <option value="">Regular</option>
+            <form action="" id="form_coment" class="form_comentarios" method="POST">
+                <textarea name="comentario" id="caja" placeholder="Comentarios"></textarea>
+                <input type="date" name="fcalificacion">
+                <select name="Ccalificacion" id="">
+                    <option value="Excelente">Excelente</option>
+                    <option value="Normal">Normal</option>
+                    <option value="Regular">Regular</option>
                 </select>
             </form>
             
@@ -103,7 +96,7 @@
        
         <div class="admin-buttons">
             <a id="volver" href="/dashboard" class="button">VOLVER</a>
-            <button id="calificar" class="button">CALIFICAR</button>
+            <button form="form_coment" id="calificar" class="button">CALIFICAR</button>
         </div>
     </div>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
