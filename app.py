@@ -126,80 +126,50 @@ def registroSuper():
         rol = roles[session["rol"]]
         nombres = session["nombre"] + " " + session["apellido"]
         nombres = nombres.upper()
-
-        if session["rol"] == 1:
-
-            if request.method == "GET":
+        
+        if request.method == "GET":
+            if session["rol"] == 1:
                 return render_template("registroSuper.html",titulo="Formulario de registro",nombre=nombres, rol=rol)
-
-            if request.method == "POST":
-                nombre = escape(request.form["nombre"])
-                nacimiento = escape(request.form["nacimiento"])
-                estado_civil = escape(request.form["estado_civil"])
-                apellido = escape(request.form["apellido"])
-                edad = escape(request.form["edad"])
-                email = escape(request.form["email"])
-                cedula = escape(request.form["cedula"])
-                celular = escape(request.form["celular"])
-                direccion = escape(request.form["direccion"])
-                ingreso = escape(request.form["ingreso"])
-                sexo = escape(request.form["sexo"])
-                termino = escape(request.form["termino"])
-                salario = escape(request.form["salario"])
-                tipo = escape(request.form["tipo"])
-                disponibilidad = escape(request.form["disponibilidad"])
-                rol = escape(request.form["select"])
-                foto = escape(request.form["upload"])
-                cedulahash = generate_password_hash(cedula)
-                    
-                try:
-                    with sqlite3.connect('joseCuervoDB.db') as con:
-                        cur = con.cursor()
-                        cur.execute("INSERT INTO usuario (CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,contraseña,primera_vez,registrador,apellido,fecha_nacimiento,sexo) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (cedula,nombre,edad,estado_civil,celular,direccion,email,ingreso,termino,tipo,salario,rol,disponibilidad,foto,cedulahash,1,session["email"],apellido,nacimiento,sexo))
-                        con.commit()
-                        flash("Registrado con exito")
-                        return redirect('/dashboard')
-                except Error as er:
-                    flash("Ocurrio un error")
-                    print('SQLite error: %s' % (' '.join(er.args)))
-                    return redirect('/registroSuper')
-        elif session["rol"] == 2:
-            if request.method == "GET":
+            elif session["rol"] == 2:
                 return render_template("registroAdmin.html",titulo="Formulario de registro",nombre=nombres, rol=rol)
+            else:
+                return redirect("/empleado")
 
-            if request.method == "POST":
-                nombre = escape(request.form["nombre"])
-                nacimiento = escape(request.form["nacimiento"])
-                estado_civil = escape(request.form["estado_civil"])
-                apellido = escape(request.form["apellido"])
-                edad = escape(request.form["edad"])
-                email = escape(request.form["email"])
-                cedula = escape(request.form["cedula"])
-                celular = escape(request.form["celular"])
-                direccion = escape(request.form["direccion"])
-                ingreso = escape(request.form["ingreso"])
-                sexo = escape(request.form["sexo"])
-                termino = escape(request.form["termino"])
-                salario = escape(request.form["salario"])
-                tipo = escape(request.form["tipo"])
-                disponibilidad = escape(request.form["disponibilidad"])
+        if request.method == "POST":
+            nombre = escape(request.form["nombre"])
+            nacimiento = escape(request.form["nacimiento"])
+            estado_civil = escape(request.form["estado_civil"])
+            apellido = escape(request.form["apellido"])
+            edad = escape(request.form["edad"])
+            email = escape(request.form["email"])
+            cedula = escape(request.form["cedula"])
+            celular = escape(request.form["celular"])
+            direccion = escape(request.form["direccion"])
+            ingreso = escape(request.form["ingreso"])
+            sexo = escape(request.form["sexo"])
+            termino = escape(request.form["termino"])
+            salario = escape(request.form["salario"])
+            tipo = escape(request.form["tipo"])
+            disponibilidad = escape(request.form["disponibilidad"])
+            if session["rol"] == 2:
                 rol = 3
-                foto = escape(request.form["upload"])
-                cedulahash = generate_password_hash(cedula)
-                    
-                try:
-                    with sqlite3.connect('joseCuervoDB.db') as con:
-                        cur = con.cursor()
-                        cur.execute("INSERT INTO usuario (CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,contraseña,primera_vez,registrador,apellido,fecha_nacimiento,sexo) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (cedula,nombre,edad,estado_civil,celular,direccion,email,ingreso,termino,tipo,salario,rol,disponibilidad,foto,cedulahash,1,session["email"],apellido,nacimiento,sexo))
-                        con.commit()
-                        flash("Registrado con exito")
-                        return redirect('/dashboard')
-                except Error as er:
-                    flash("Ocurrio un error")
-                    print('SQLite error: %s' % (' '.join(er.args)))
-                    return redirect('/registroSuper')
-        else:
-            return redirect("/empleado")
+            else:
+                rol = escape(request.form["select"])
+            foto = escape(request.form["upload"])
+            cedulahash = generate_password_hash(cedula)
+                     
+            try:
+                with sqlite3.connect('joseCuervoDB.db') as con:
+                    cur = con.cursor()
+                    cur.execute("INSERT INTO usuario (CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,contraseña,primera_vez,registrador,apellido,fecha_nacimiento,sexo) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (cedula,nombre,edad,estado_civil,celular,direccion,email,ingreso,termino,tipo,salario,rol,disponibilidad,foto,cedulahash,1,session["email"],apellido,nacimiento,sexo))
+                    con.commit()
+                    flash("Registrado con exito")
+                    return redirect('/dashboard')
+            except Error as er:
+                flash("Ocurrio un error")
+                print('SQLite error: %s' % (' '.join(er.args)))
+                return redirect('/registroSuper')
+        
     else:
         return redirect("/")
 
