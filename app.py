@@ -156,6 +156,7 @@ def registroSuper():
             disponibilidad = escape(request.form["disponibilidad"])
             rol = escape(request.form["select"])
             foto = escape(request.form["upload"])
+            cedulahash = generate_password_hash(cedula)
 
             if disponibilidad.lower() == "disponible":
                 disponibilidad = 1
@@ -165,7 +166,7 @@ def registroSuper():
             try:
                 with sqlite3.connect('joseCuervoDB.db') as con:
                     cur = con.cursor()
-                    cur.execute("INSERT INTO usuario (CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,contraseña,activo,primera_vez,registrador,apellido,fecha_nacimiento,cargo) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (cedula,nombre,edad,estado_civil,celular,direccion,email,ingreso,termino,tipo,salario,rol,disponibilidad,foto,cedula,1,1,session["email"],apellido,nacimiento,cargo))
+                    cur.execute("INSERT INTO usuario (CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,contraseña,activo,primera_vez,registrador,apellido,fecha_nacimiento,cargo) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (cedula,nombre,edad,estado_civil,celular,direccion,email,ingreso,termino,tipo,salario,rol,disponibilidad,foto,cedulahash,1,1,session["email"],apellido,nacimiento,cargo))
                     con.commit()
             except Error as er:
                 flash("Ocurrio un error")

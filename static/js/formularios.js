@@ -9,6 +9,6 @@ input.addEventListener("change", ()=> {
 });
 
 let user = window.location.href.split("/");
-if (user[4] != undefined && user[3] == "actualizar"){
+if (user[4] != undefined || user[3] == "solicitud"){
   var a = document.getElementById("cc").disabled = true;
 }
