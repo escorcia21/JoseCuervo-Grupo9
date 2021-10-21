@@ -187,104 +187,61 @@ def actualizar_usuario(cedula):
         nombres = session["nombre"] + " " + session["apellido"]
         nombres = nombres.upper()
 
-        if session["rol"] == 1:
-            if request.method == "GET":
-                try:
-                    with sqlite3.connect('joseCuervoDB.db') as con:
-                        con.row_factory = sqlite3.Row 
-                        cur = con.cursor()
-                        cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=?",[str(cedula)])
-                        usuario = cur.fetchone()
+        if request.method == "GET":
+            try:
+                with sqlite3.connect('joseCuervoDB.db') as con:
+                    con.row_factory = sqlite3.Row 
+                    cur = con.cursor()
+                    cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=?",[str(cedula)])
+                    usuario = cur.fetchone()
 
-                        if usuario is None:
-                            return redirect(f"/dashboard/{cedula}")
-                        else:
+                    if usuario is None:
+                        return redirect(f"/dashboard/{cedula}")
+                    else:
+                        if session["rol"] == 1:
                             return render_template("registroSuper.html",nombre=nombres, rol=rol,Unombre=usuario["nombre"],apellido=usuario["apellido"],edad=usuario["edad"],sexo=usuario["sexo"],cedula=usuario["CC"],nacimiento=usuario["fecha_nacimiento"],estado=usuario["estado_civil"],celular=usuario["celular"],direccion=usuario["direccion"],email=usuario["email"],ingreso=usuario["fecha_ingreso"],termino=usuario["fecha_termino"],tipo=usuario["tipo_contrato"],salario=usuario["salario"],Rol=usuario["rol"],disponible=disponible[usuario["disponibilidad"]])
-                except Error as er:
-                    print('SQLite error: %s' % (' '.join(er.args)))
-            
-            if request.method == "POST":
-                nombre = escape(request.form["nombre"])
-                nacimiento = escape(request.form["nacimiento"])
-                estado_civil = escape(request.form["estado_civil"])
-                apellido = escape(request.form["apellido"])
-                edad = escape(request.form["edad"])
-                email = escape(request.form["email"])
-                #ucedula = escape(request.form["cedula"])
-                celular = escape(request.form["celular"])
-                direccion = escape(request.form["direccion"])
-                ingreso = escape(request.form["ingreso"])
-                sexo = escape(request.form["sexo"])
-                termino = escape(request.form["termino"])
-                salario = escape(request.form["salario"])
-                tipo = escape(request.form["tipo"])
-                udisponibilidad = escape(request.form["disponibilidad"])
-                urol = escape(request.form["select"])
-                foto = escape(request.form["upload"])
-
-                try :
-                    with sqlite3.connect('joseCuervoDB.db') as con:
-                        cur = con.cursor()
-                        cur.execute('UPDATE usuario SET nombre=?,edad=?,estado_civil=?,celular=?,direccion=?,email=?,fecha_ingreso=?,fecha_termino=?,tipo_contrato=?,salario=?,rol=?,disponibilidad=?,foto=?,apellido=?,fecha_nacimiento=?,sexo=? WHERE CC=?',(nombre,edad,estado_civil,celular,direccion,email,ingreso,termino,tipo,salario,urol,udisponibilidad,foto,apellido,nacimiento,sexo,cedula))
-                        con.commit()
-                        if con.total_changes > 0:
-                            flash("Actualizado con exito")
-                            return redirect(f"/dashboard/{cedula}")
-                        else:
-                            flash("Ocurrio un error")
-                            return redirect(f"/actualizar/{cedula}")
-                except Error as er:
-                    print('SQLite error: %s' % (' '.join(er.args)))
-        elif session["rol"] == 2:
-            if request.method == "GET":
-                try:
-                    with sqlite3.connect('joseCuervoDB.db') as con:
-                        con.row_factory = sqlite3.Row 
-                        cur = con.cursor()
-                        cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=?",[str(cedula)])
-                        usuario = cur.fetchone()
-
-                        if usuario is None:
-                            return redirect(f"/dashboard/{cedula}")
-                        else:
+                        if session["rol"] == 2:
                             return render_template("registroAdmin.html",nombre=nombres,Unombre=usuario["nombre"],apellido=usuario["apellido"],edad=usuario["edad"],sexo=usuario["sexo"],cedula=usuario["CC"],nacimiento=usuario["fecha_nacimiento"],estado=usuario["estado_civil"],celular=usuario["celular"],direccion=usuario["direccion"],email=usuario["email"],ingreso=usuario["fecha_ingreso"],termino=usuario["fecha_termino"],tipo=usuario["tipo_contrato"],salario=usuario["salario"], rol=rol,disponible=disponible[usuario["disponibilidad"]])
-                except Error as er:
-                    print('SQLite error: %s' % (' '.join(er.args)))
-            
-            if request.method == "POST":
-                nombre = escape(request.form["nombre"])
-                nacimiento = escape(request.form["nacimiento"])
-                estado_civil = escape(request.form["estado_civil"])
-                apellido = escape(request.form["apellido"])
-                edad = escape(request.form["edad"])
-                email = escape(request.form["email"])
-                #ucedula = escape(request.form["cedula"])
-                celular = escape(request.form["celular"])
-                direccion = escape(request.form["direccion"])
-                ingreso = escape(request.form["ingreso"])
-                sexo = escape(request.form["sexo"])
-                termino = escape(request.form["termino"])
-                salario = escape(request.form["salario"])
-                tipo = escape(request.form["tipo"])
-                udisponibilidad = escape(request.form["disponibilidad"])
-                urol = 3
-                foto = escape(request.form["upload"])
-
-                try :
-                    with sqlite3.connect('joseCuervoDB.db') as con:
-                        cur = con.cursor()
-                        cur.execute('UPDATE usuario SET nombre=?,edad=?,estado_civil=?,celular=?,direccion=?,email=?,fecha_ingreso=?,fecha_termino=?,tipo_contrato=?,salario=?,rol=?,disponibilidad=?,foto=?,apellido=?,fecha_nacimiento=?,sexo=? WHERE CC=?',(nombre,edad,estado_civil,celular,direccion,email,ingreso,termino,tipo,salario,urol,udisponibilidad,foto,apellido,nacimiento,sexo,cedula))
-                        con.commit()
-                        if con.total_changes > 0:
-                            flash("Actualizado con exito")
-                            return redirect(f"/dashboard/{cedula}")
                         else:
-                            flash("Ocurrio un error")
-                            return redirect(f"/actualizar/{cedula}")
-                except Error as er:
-                    print('SQLite error: %s' % (' '.join(er.args)))
-        else:
-            return redirect("/empleado")
+                            return redirect("/empleado")
+            except Error as er:
+                print('SQLite error: %s' % (' '.join(er.args)))
+
+        
+        if request.method == "POST":
+            nombre = escape(request.form["nombre"])
+            nacimiento = escape(request.form["nacimiento"])
+            estado_civil = escape(request.form["estado_civil"])
+            apellido = escape(request.form["apellido"])
+            edad = escape(request.form["edad"])
+            email = escape(request.form["email"])
+            celular = escape(request.form["celular"])
+            direccion = escape(request.form["direccion"])
+            ingreso = escape(request.form["ingreso"])
+            sexo = escape(request.form["sexo"])
+            termino = escape(request.form["termino"])
+            salario = escape(request.form["salario"])
+            tipo = escape(request.form["tipo"])
+            udisponibilidad = escape(request.form["disponibilidad"])
+            if session["rol"] == 1:
+                urol = escape(request.form["select"])
+            else:
+                urol = 3
+            foto = escape(request.form["upload"])
+
+            try :
+                with sqlite3.connect('joseCuervoDB.db') as con:
+                    cur = con.cursor()
+                    cur.execute('UPDATE usuario SET nombre=?,edad=?,estado_civil=?,celular=?,direccion=?,email=?,fecha_ingreso=?,fecha_termino=?,tipo_contrato=?,salario=?,rol=?,disponibilidad=?,foto=?,apellido=?,fecha_nacimiento=?,sexo=? WHERE CC=?',(nombre,edad,estado_civil,celular,direccion,email,ingreso,termino,tipo,salario,urol,udisponibilidad,foto,apellido,nacimiento,sexo,cedula))
+                    con.commit()
+                    if con.total_changes > 0:
+                        flash("Actualizado con exito")
+                        return redirect(f"/dashboard/{cedula}")
+                    else:
+                        flash("Ocurrio un error")
+                        return redirect(f"/actualizar/{cedula}")
+            except Error as er:
+                print('SQLite error: %s' % (' '.join(er.args)))
     else:
         return redirect("/")
 
