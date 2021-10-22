@@ -24,9 +24,7 @@ var campos = {
 	ingreso: false,
 	termino: false,
 	salario: false,
-	tipo: false,
-	direccion: false,
-	estado: false
+	direccion: false
 }
 
 let r = window.location.href.split("/")[3];
@@ -42,9 +40,7 @@ if (r == "actualizar"){
 		ingreso: true,
 		termino: true,
 		salario: true,
-		tipo: true,
-		direccion: true,
-		estado: true
+		direccion: true
 	}
 }
 
@@ -87,9 +83,6 @@ const validarFormulario = (e) => {
     case "celular":
 			validarCampo(expresiones.numeros, e.target, 'celular');
 		break;
-    case "tipo":
-			validarCampo(expresiones.nombre, e.target, 'tipo');
-		break;
     case "salario":
 			validarCampo(expresiones.numeros, e.target, 'salario');
 		break;
@@ -104,9 +97,6 @@ const validarFormulario = (e) => {
 		break;
     case "direccion":
 			validarCampo(expresiones.direccion, e.target, 'direccion');
-		break;
-    case "estado_civil":
-			validarCampo(expresiones.nombre, e.target, 'estado');
 		break;
 	
     
@@ -136,7 +126,7 @@ inputs.forEach((input) => {
 
 formulario.addEventListener('submit', (e) => {
 	e.preventDefault();
-	if (campos.nombre && campos.apellido&& campos.cedula && campos.celular && campos.email && campos.direccion && campos.tipo && campos.ingreso && campos.nacimiento && campos.termino && campos.salario && campos.edad && campos.estado){
+	if (campos.nombre && campos.apellido&& campos.cedula && campos.celular && campos.email && campos.direccion  && campos.ingreso && campos.nacimiento && campos.termino && campos.salario && campos.edad ){
 		formulario.submit();
 	}
 });

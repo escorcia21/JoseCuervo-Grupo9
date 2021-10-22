@@ -7,7 +7,7 @@
 {% block content %}
 <main>
     <div class="form-container">
-        <form method="POST" id="formulario">
+        <form method="POST" enctype="multipart/form-data" id="formulario">
             <h1>{{ titulo }}</h1>
             <p class="titulos">Datos personales</p>
             <div class="informacion-personal">
@@ -41,7 +41,10 @@
                 </div>
                 <div class="field-container">
                     <p class="titulo">Estado civil</p>
-                    <input value="{{estado}}" type="text"  name="estado_civil">
+                    <select name="estado_civil" >
+                        <option value="soltero">Soltero</option>
+                        <option value="casado">Casado</option>
+                    </select>
                 </div>
                 <div class="field-container">
                     <p class="titulo">Email</p>
@@ -69,7 +72,13 @@
                 </div>
                 <div class="field-container">
                     <p class="titulo">Tipo de contrato</p>
-                    <input value="{{tipo}}" type="text" name="tipo">
+                    <select name="tipo" >
+                        <option value="termino fijo">Termino fijo</option>
+                        <option value="prestación de servicios">Prestación de servicios</option>
+                        <option value="apredizaje">Apredizaje</option>
+                        <option value="termino indefinido">Termino indefinido</option>
+                        <option value="obra o labor">Obra o labor</option>
+                    </select>
                 </div>
                 <div class="field-container">
                     <p class="titulo">Salario</p>
@@ -98,7 +107,7 @@
                         <span id="txt">Sube una foto</span>
                         <img src="{{ url_for('static', filename='imgs/upload.svg') }}" alt="">
                     </label>
-                    <input type="file" name="upload" id="upload">
+                    <input type="file" name="archivo" id="upload">
                 </div>
             </div>
             <div class="botones">

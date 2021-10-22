@@ -39,7 +39,7 @@
             {% for r in row %}
             <li>
                 <div class="user">
-                    <img src="{{ url_for('static', filename='imgs/img.jpg') }}" alt="" class="foto-perfil">
+                    <img src='{{ url_for("static", filename=r[2])}}' alt="" class="foto-perfil">
 
                     <div class="user__info">
                         <p id="Tnombre">{{r["nombre"]}} {{r["apellido"]}}</p>
@@ -66,7 +66,7 @@
     </div>
     <div class="info-usuarios">
         <div class="top-info">
-            <img src="{{ url_for('static', filename='imgs/dafault.png') }}" alt="">
+            <img src="{{ url_for('static', filename=imagen) }}" alt="">
             <div class="usuario-info-ocupacion">
                 <p class="nombre">{{Unombre}}</p>
                 <p class="cedula">{{cedula}}</p>
