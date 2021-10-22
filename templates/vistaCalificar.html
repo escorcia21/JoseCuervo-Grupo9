@@ -83,7 +83,7 @@
             </ul>
             
             <form action="" id="form_coment" class="form_comentarios" method="POST">
-                <textarea name="comentario" id="caja" placeholder="Comentarios"></textarea>
+                <textarea name="comentario" class="caja"  maxlength="350" placeholder="Comentarios"></textarea>
                 <input type="date" name="fcalificacion">
                 <select name="Ccalificacion" id="">
                     <option value="Excelente">Excelente</option>
@@ -99,7 +99,7 @@
             <button form="form_coment" id="calificar" class="button">CALIFICAR</button>
         </div>
     </div>
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/calificar.js') }}"></script>
 </main>
 </main>
 {% endblock %}

@@ -41,12 +41,20 @@ h1 {
     text-align: center;
 }
 
-input[type=date],input[type=number],input[type=text],input[type=email],input[type=time] {
+input {
     width: 100%;
     border: 3px solid var(--secondary-color);
     border-radius: 50px;
     height: 2rem;
     padding: 1rem 1rem;
+}
+
+.correcto {
+    border-color: var(--validation-color);
+}
+
+.incorrecto {
+    border-color: var(--main-color);
 }
 
 select {

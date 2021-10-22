@@ -96,18 +96,27 @@ main{
 }
 
 
-#caja {
+.caja {
     height: 300px;
     width: 90%;
     resize: none;
-    border: 2px solid var(--secondary-color);
+    border: 3px solid var(--secondary-color);
     border-radius: 25px;
     padding: 1rem;
 }
 
-#caja:focus {
+.caja:focus {
     outline: none;
 }
+
+.correcto {
+    border-color: var(--validation-color);
+}
+
+.incorrecto {
+    border-color: var(--main-color);
+}
+
 
 /* formulario botones */
 .admin-buttons {
@@ -167,7 +176,7 @@ input,select {
     margin-top: 2rem;
     width: 90%;
     height: 2rem;
-    border: 2px solid var(--secondary-color);
+    border: 3px solid var(--secondary-color);
     border-radius: 25px;
     padding: 0 1rem;
 
