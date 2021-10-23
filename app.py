@@ -68,6 +68,7 @@ def login():
                             return render_template("login.html")
             except Error as er:
                 print('SQLite error: %s' % (' '.join(er.args)))
+                return render_template("login.html")
        
 
 @app.route('/recuperar', methods=["POST","GET"])
@@ -305,7 +306,7 @@ def calificar(cedula):
                         con.row_factory = sqlite3.Row 
                         cur = con.cursor()
                         
-                        if session["rol"] == 2:
+                        if session["rol"] == 3:
                             cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=? AND rol=?",(str(cedula),3))
                             usuario = cur.fetchone()
                         else: 
@@ -336,9 +337,9 @@ def calificar(cedula):
                     cur = con.cursor()
                     cur.execute("INSERT INTO calificaciones_usuario (calificacion,usuario,evaluador,fecha,comentario) VALUES (?,?,?,?,?)",(calificacion,str(cedula),session["usuario"],fecha,comentario))
                     con.commit()
-                    flash("Calificaión agregado con exito","info")
+                    flash("Calificación agregado con exito","info")
             except Error as er:
-                flash("Calificaión un error al agregar un mensaje","error")
+                flash("Calificación un error al agregar un mensaje","error")
                 print('SQLite error: %s' % (' '.join(er.args)))
 
             return redirect(f"/calificar/{cedula}")
@@ -353,7 +354,34 @@ def empleado():
     En esta ruta pertenece al usuario de tipo empleado
     en esta podra consultar toda su informacion personal, ademas podra generar una peticion de actualizacion de datos.
     '''
-    return render_template("vistaEmpleado.html",perfil=session["foto"])
+    if "usuario" in  session:
+        rol = roles[session["rol"]]
+        nombres = session["nombre"] + " " + session["apellido"]
+        nombres = nombres.upper()
+    
+        if request.method == "GET":
+            try:
+                with sqlite3.connect('joseCuervoDB.db') as con:
+                    con.row_factory = sqlite3.Row 
+                    cur = con.cursor()
+                    
+                    if session["rol"] == 3:
+                        cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=?" ,[str(session["usuario"])])
+                        usuario = cur.fetchone()
+
+                    if usuario is None:
+                        return redirect("/login")
+                    else:
+                        cur.execute("SELECT comentario,fecha,calificacion FROM calificaciones_usuario WHERE usuario=?",[str(session["usuario"])])
+                        calificaciones = cur.fetchall()
+
+                        return render_template("vistaEmpleado.html",nombre=nombres, rol=rol,Unombre=usuario["nombre"],apellido=usuario["apellido"],edad=usuario["edad"],sexo=usuario["sexo"],cedula=usuario["CC"],nacimiento=usuario["fecha_nacimiento"],estado=usuario["estado_civil"],celular=usuario["celular"],direccion=usuario["direccion"],email=usuario["email"],ingreso=usuario["fecha_ingreso"],termino=usuario["fecha_termino"],tipo=usuario["tipo_contrato"],salario=usuario["salario"],cargo=roles[usuario["rol"]].lower(),disponible=disponible[usuario["disponibilidad"]],cali=calificaciones,imagen=usuario["foto"],perfil=session["foto"])
+            except Error as er:
+                print('SQLite error: %s' % (' '.join(er.args)))
+        else:
+            return redirect("/empleado")
+
+        
 
 @app.route('/solicitud', methods=["PUT","GET"])
 def solicitud():
