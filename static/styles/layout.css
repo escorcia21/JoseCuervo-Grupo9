@@ -125,39 +125,6 @@ body {
     display: block;
 }
 
-
-/* alertas */
-/* The alert message box */
-.alert {
-    display: flex;
-    justify-content: center;
-    padding: 10px;
-    background-color: #f44336; /* Red */
-    margin-bottom: 15px;
-    width: 40vw;
-    min-width: 220px;
-    position: absolute;
-    top: 0px;
-    /* top: 50%; */
-    left: 50%;
-    transform: translate(-50%, 0);
-    text-align: center;
-    z-index: 12;
-    min-height: 80px;
-}
-
-.alert div {
-    display: flex;
-    width: 90%;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.alert div  p {
-    color: white;
-    text-align: center;
-}
-
 /* The close button */
 .closebtn {
     margin-left: 6px;

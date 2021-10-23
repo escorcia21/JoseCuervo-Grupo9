@@ -57,7 +57,7 @@ input:focus {
 }
 
 /* tabla */
-ul {
+#tabla {
     list-style-type: none;
     width: 97%;
     height: 80%;
@@ -67,7 +67,7 @@ ul {
     overflow-y: scroll;
 }
 
-li{
+#tabla li{
     width: 80%;
     height: 4.2rem;
     /* padding: 0rem; */
@@ -331,7 +331,7 @@ a {
         height: calc(20% - 50px);
     }
 
-    ul {
+    #tabla {
         height: 75%;
     }
 

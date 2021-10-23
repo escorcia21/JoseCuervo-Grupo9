@@ -1,0 +1,106 @@
+/* alertas */
+/* The alert message box */
+#alert {
+    min-width: 220px;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 12;
+}
+
+.Message {
+    display: table;
+    position: relative;
+    margin-bottom: 10px;
+    min-width: 300px;
+}
+
+.Message-icon {
+    display: table-cell;
+    vertical-align: middle;
+    width: 60px;
+    padding: 30px;
+    text-align: center;
+    background-color: rgba(1, 1, 1, 0.25);
+    
+    
+}
+
+.Message-icon > i {
+    width: 20px;
+    font-size: 20px;
+    color: #fff; 
+}
+
+    
+.Message-body {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 30px 20px 30px 10px;
+}    
+.Message-body > p {
+    line-height: 1.2;
+    margin-top: 6px;
+    color: #fff; 
+}
+
+.Message-button {
+    position: relative;
+    margin: 15px 5px -10px;
+    background-color: rgba(1, 1, 1, 0.25);
+    box-shadow: 0 3px rgba(1, 1, 1, 0.4);
+    border:none;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-family: 'Source Sans Pro';
+    outline: none;
+    cursor: pointer;
+}
+
+.Message-button:hover {
+    background: rgba(1, 1, 1, 0.3);
+}
+
+.Message-button:active {
+    background: rgba(1, 1, 1, 0.3);
+    box-shadow: 0 0px rgba(1, 1, 1, 0.4);
+    top: 3px;
+}
+
+
+.Message-close {
+    position: absolute;
+    background-color: rgba(1, 1, 1, 0.3);
+    border: none;
+    outline: none;
+    font-size: 20px;
+    right: 5px;
+    top: 5px;
+    opacity: 0;
+    cursor: pointer;
+}    
+
+.Message:hover .Message-close  {
+    opacity: 1;
+}
+
+.Message-close i {
+    color: #fff; 
+    padding: 0 4px;
+}
+
+.Message-close:hover {
+    background-color: rgba(1, 1, 1, 0.5);
+}
+
+.u-italic {
+    font-style: italic;
+}
+
+.error{
+    background-color: rgb(224, 65, 65); /* Red */
+}
+
+.info{
+    background-color: #5cb85c ; /* Red */
+}

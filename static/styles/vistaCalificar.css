@@ -199,18 +199,18 @@ select:focus {
 }
 
 
-li{
+#calificaciones li{
     min-height: 150px;
     background-color:#F1F1F1;
     margin-bottom: 1rem;
     padding: 0 1rem;
 }
 
-li:nth-child(2n+0) {
+#calificaciones li:nth-child(2n+0) {
     background-color: #D6D6D6;
 }
 
-li p{
+#calificaciones li p{
     color:var(--secondary-color);
     
 }

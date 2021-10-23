@@ -7,23 +7,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/normalize.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/alertas.css') }}">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>JoseCuervo</title>
 </head>
 <body>
     <video  muted autoplay loop>
         <source src="{{ url_for('static', filename='imgs/videoinicio.mp4') }}" type="video/mp4">
     </video>
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-        <div class="alert">
-            <div>
-            {% for message in messages %}
-                <p>{{ message }}</p>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        
+        <ul  id="alert">
+            {% for category,message in messages %}
+                <li class="Message {{category}}">
+                    <div class="Message-icon">
+                        {% if category == 'error' %}
+                            <i class="fa fa-exclamation"></i>
+                        {% else %}
+                            <i class="fa fa-check"></i>
+                        {% endif %}
+                    </div>
+                    <div class="Message-body">
+                        <p>{{ message }}</p>
+                    </div>
+                    <button class="Message-close js-messageClose" onclick="this.parentElement.style.display='none';"><i class="fa fa-times"></i></button>
+                </li>
             {% endfor %}
-            </div>
-            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
-        </div>
-    {% endif %}
+        </ul>
+        {% endif %}
     {% endwith %}
     <div class="container">
         <form method="POST">
@@ -40,7 +53,7 @@
             <a href="/recuperar">¿Has olvidado tu contraseña?</a><br>
             <input class="button" type="submit" value="INICIAR SESIÓN">
         </form>
-        <div class="info">
+        <div class="politicas">
             <a target="_blank" href="/politicas" >Política de privacidad y condiciones</a>
         </div>
     </div>

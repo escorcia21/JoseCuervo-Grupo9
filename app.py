@@ -45,10 +45,10 @@ def login():
             try:
                 with sqlite3.connect('joseCuervoDB.db') as con:
                     cur = con.cursor()
-                    cur.execute("SELECT contraseña,rol,nombre,apellido,email FROM usuario WHERE CC = ?", [usuario])
+                    cur.execute("SELECT contraseña,rol,nombre,apellido,email,foto FROM usuario WHERE CC = ?", [usuario])
                     row = cur.fetchone()
                     if row is None:
-                        flash("Usuario no encontrado")
+                        flash("Usuario no encontrado","error")
                         return render_template("login.html")
                     else:
                         clavehash = row[0]
@@ -58,12 +58,13 @@ def login():
                             session["nombre"] = row[2]
                             session["apellido"] = row[3]
                             session["email"] = row[4]
+                            session["foto"] = row[5]
                             if (int(row[1]) == 1 or int(row[1]) == 2):
                                 return redirect("dashboard")
                             elif (int(row[1]) == 3):
                                 return redirect("empleado")
                         else:
-                            flash("Contraseña invalida")
+                            flash("Contraseña invalida","error")
                             return render_template("login.html")
             except Error as er:
                 print('SQLite error: %s' % (' '.join(er.args)))
@@ -119,12 +120,12 @@ def dashboard():
                 except Error  as er:
                     print('SQLite error: %s' % (' '.join(er.args)))
 
-                return render_template("dashboard.html",nombre=nombres, rol=rol,target=target, row = row,Unombre="Nombre",cedula="Cedula",sexo="Sexo",imagen=imagen)
+                return render_template("dashboard.html",nombre=nombres, rol=rol,target=target, row = row,Unombre="Nombre",cedula="Cedula",sexo="Sexo",imagen=imagen,perfil=session["foto"])
             else:
                 return redirect("/empleado")
 
         if request.method == "POST":
-            return render_template("dashboard.html",nombre=session["nombre"], rol=rol)
+            return render_template("dashboard.html",nombre=session["nombre"], rol=rol,perfil=session["foto"])
     else:
         return redirect("/")
 
@@ -140,9 +141,9 @@ def registro():
         
         if request.method == "GET":
             if session["rol"] == 1:
-                return render_template("registroSuper.html",titulo="Formulario de registro",nombre=nombres, rol=rol)
+                return render_template("registroSuper.html",titulo="Formulario de registro",nombre=nombres, rol=rol,perfil=session["foto"])
             elif session["rol"] == 2:
-                return render_template("registroAdmin.html",titulo="Formulario de registro",nombre=nombres, rol=rol)
+                return render_template("registroAdmin.html",titulo="Formulario de registro",nombre=nombres, rol=rol,perfil=session["foto"])
             else:
                 return redirect("/empleado")
 
@@ -180,7 +181,7 @@ def registro():
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 filename = "profile/"+filename
             else:
-                flash("No se subio la foto, extension no soportada")
+                flash("No se subio la foto, extension no soportada","error")
 
 
             try:
@@ -188,12 +189,12 @@ def registro():
                     cur = con.cursor()
                     cur.execute("INSERT INTO usuario (CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,contraseña,primera_vez,registrador,apellido,fecha_nacimiento,sexo) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (cedula,nombre,edad,estado_civil,celular,direccion,email,ingreso,termino,tipo,salario,rol,disponibilidad,filename,cedulahash,1,session["email"],apellido,nacimiento,sexo))
                     con.commit()
-                    flash("Registrado con exito")
+                    flash("Registrado con exito","info")
                     return redirect('/dashboard')
             except Error as er:
-                flash("Ocurrio un error")
+                flash("Ocurrio un error","error")
                 print('SQLite error: %s' % (' '.join(er.args)))
-                return redirect('/registroSuper')
+                return redirect('/registro')
         
     else:
         return redirect("/")
@@ -207,7 +208,7 @@ def actualizar_usuario(cedula):
     En esta ruta se podran actualizar usuarios a la base de datos, se debe diligenciar los campos que se desean actualizar. Se podra cancelar con el boton devolver el cual nos regresa al dashboard
     '''
 
-    if "usuario" in session and cedula != int(session["usuario"]):
+    if "usuario" in session:
         rol = roles[session["rol"]]
         nombres = session["nombre"] + " " + session["apellido"]
         nombres = nombres.upper()
@@ -224,9 +225,9 @@ def actualizar_usuario(cedula):
                         return redirect(f"/dashboard/{cedula}")
                     else:
                         if session["rol"] == 1:
-                            return render_template("registroSuper.html",nombre=nombres, rol=rol,Unombre=usuario["nombre"],apellido=usuario["apellido"],edad=usuario["edad"],sexo=usuario["sexo"],cedula=usuario["CC"],nacimiento=usuario["fecha_nacimiento"],estado=usuario["estado_civil"],celular=usuario["celular"],direccion=usuario["direccion"],email=usuario["email"],ingreso=usuario["fecha_ingreso"],termino=usuario["fecha_termino"],salario=usuario["salario"],Rol=usuario["rol"],disponible=disponible[usuario["disponibilidad"]])
+                            return render_template("registroSuper.html",nombre=nombres, rol=rol,Unombre=usuario["nombre"],apellido=usuario["apellido"],edad=usuario["edad"],sexo=usuario["sexo"],cedula=usuario["CC"],nacimiento=usuario["fecha_nacimiento"],estado=usuario["estado_civil"],celular=usuario["celular"],direccion=usuario["direccion"],email=usuario["email"],ingreso=usuario["fecha_ingreso"],termino=usuario["fecha_termino"],salario=usuario["salario"],Rol=usuario["rol"],disponible=disponible[usuario["disponibilidad"]],perfil=session["foto"])
                         if session["rol"] == 2:
-                            return render_template("registroAdmin.html",nombre=nombres,Unombre=usuario["nombre"],apellido=usuario["apellido"],edad=usuario["edad"],sexo=usuario["sexo"],cedula=usuario["CC"],nacimiento=usuario["fecha_nacimiento"],estado=usuario["estado_civil"],celular=usuario["celular"],direccion=usuario["direccion"],email=usuario["email"],ingreso=usuario["fecha_ingreso"],termino=usuario["fecha_termino"],salario=usuario["salario"], rol=rol,disponible=disponible[usuario["disponibilidad"]])
+                            return render_template("registroAdmin.html",nombre=nombres,Unombre=usuario["nombre"],apellido=usuario["apellido"],edad=usuario["edad"],sexo=usuario["sexo"],cedula=usuario["CC"],nacimiento=usuario["fecha_nacimiento"],estado=usuario["estado_civil"],celular=usuario["celular"],direccion=usuario["direccion"],email=usuario["email"],ingreso=usuario["fecha_ingreso"],termino=usuario["fecha_termino"],salario=usuario["salario"], rol=rol,disponible=disponible[usuario["disponibilidad"]],perfil=session["foto"])
                         else:
                             return redirect("/empleado")
             except Error as er:
@@ -265,7 +266,7 @@ def actualizar_usuario(cedula):
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 filename = "profile/"+filename
             else:
-                flash("No se subio la foto, extension no soportada")
+                flash("No se subio la foto, extension no soportada","error")
 
 
             try :
@@ -274,10 +275,10 @@ def actualizar_usuario(cedula):
                     cur.execute('UPDATE usuario SET nombre=?,edad=?,estado_civil=?,celular=?,direccion=?,email=?,fecha_ingreso=?,fecha_termino=?,tipo_contrato=?,salario=?,rol=?,disponibilidad=?,foto=?,apellido=?,fecha_nacimiento=?,sexo=? WHERE CC=?',(nombre,edad,estado_civil,celular,direccion,email,ingreso,termino,tipo,salario,urol,udisponibilidad,filename,apellido,nacimiento,sexo,cedula))
                     con.commit()
                     if con.total_changes > 0:
-                        flash("Actualizado con exito")
+                        flash("Actualizado con exito","info")
                         return redirect(f"/dashboard/{cedula}")
                     else:
-                        flash("Ocurrio un error")
+                        flash("Ocurrio un error","error")
                         return redirect(f"/actualizar/{cedula}")
             except Error as er:
                 print('SQLite error: %s' % (' '.join(er.args)))
@@ -298,28 +299,31 @@ def calificar(cedula):
         nombres = nombres.upper()
 
         if request.method == "GET":
-            try:
-                with sqlite3.connect('joseCuervoDB.db') as con:
-                    con.row_factory = sqlite3.Row 
-                    cur = con.cursor()
-                    
-                    if session["rol"] == 2:
-                        cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=? AND rol=?",(str(cedula),3))
-                        usuario = cur.fetchone()
-                    else: 
-                        cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=?",[str(cedula)])
-                        usuario = cur.fetchone()
+            if session["rol"] != 3:
+                try:
+                    with sqlite3.connect('joseCuervoDB.db') as con:
+                        con.row_factory = sqlite3.Row 
+                        cur = con.cursor()
+                        
+                        if session["rol"] == 2:
+                            cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=? AND rol=?",(str(cedula),3))
+                            usuario = cur.fetchone()
+                        else: 
+                            cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=?",[str(cedula)])
+                            usuario = cur.fetchone()
 
-                    if usuario is None:
-                        return redirect("/dashboard")
-                    else:
-                        cur.execute("SELECT comentario,fecha,calificacion FROM calificaciones_usuario WHERE usuario=?",[str(cedula)])
-                        calificaciones = cur.fetchall()
+                        if usuario is None:
+                            return redirect("/dashboard")
+                        else:
+                            cur.execute("SELECT comentario,fecha,calificacion FROM calificaciones_usuario WHERE usuario=?",[str(cedula)])
+                            calificaciones = cur.fetchall()
 
-                        return render_template("vistacalificar.html",nombre=nombres, rol=rol,Unombre=usuario["nombre"],apellido=usuario["apellido"],edad=usuario["edad"],sexo=usuario["sexo"],cedula=usuario["CC"],nacimiento=usuario["fecha_nacimiento"],estado=usuario["estado_civil"],celular=usuario["celular"],direccion=usuario["direccion"],email=usuario["email"],ingreso=usuario["fecha_ingreso"],termino=usuario["fecha_termino"],tipo=usuario["tipo_contrato"],salario=usuario["salario"],cargo=roles[usuario["rol"]].lower(),disponible=disponible[usuario["disponibilidad"]],cali=calificaciones)
-            except Error as er:
-                print('SQLite error: %s' % (' '.join(er.args)))
-                return redirect(f"/dashboard/{cedula}")
+                            return render_template("vistacalificar.html",nombre=nombres, rol=rol,Unombre=usuario["nombre"],apellido=usuario["apellido"],edad=usuario["edad"],sexo=usuario["sexo"],cedula=usuario["CC"],nacimiento=usuario["fecha_nacimiento"],estado=usuario["estado_civil"],celular=usuario["celular"],direccion=usuario["direccion"],email=usuario["email"],ingreso=usuario["fecha_ingreso"],termino=usuario["fecha_termino"],tipo=usuario["tipo_contrato"],salario=usuario["salario"],cargo=roles[usuario["rol"]].lower(),disponible=disponible[usuario["disponibilidad"]],cali=calificaciones,imagen=usuario["foto"],perfil=session["foto"])
+                except Error as er:
+                    print('SQLite error: %s' % (' '.join(er.args)))
+                    return redirect(f"/dashboard/{cedula}")
+            else:
+                return redirect("/empleado")
 
         if request.method == "POST":
             calificacion = escape(request.form["Ccalificacion"])
@@ -332,9 +336,9 @@ def calificar(cedula):
                     cur = con.cursor()
                     cur.execute("INSERT INTO calificaciones_usuario (calificacion,usuario,evaluador,fecha,comentario) VALUES (?,?,?,?,?)",(calificacion,str(cedula),session["usuario"],fecha,comentario))
                     con.commit()
-                    flash("Mensaje agregado con exito")
+                    flash("Calificaión agregado con exito","info")
             except Error as er:
-                flash("Ocurrio un error al agregar un mensaje")
+                flash("Calificaión un error al agregar un mensaje","error")
                 print('SQLite error: %s' % (' '.join(er.args)))
 
             return redirect(f"/calificar/{cedula}")
@@ -349,14 +353,14 @@ def empleado():
     En esta ruta pertenece al usuario de tipo empleado
     en esta podra consultar toda su informacion personal, ademas podra generar una peticion de actualizacion de datos.
     '''
-    return render_template("vistaEmpleado.html")
+    return render_template("vistaEmpleado.html",perfil=session["foto"])
 
 @app.route('/solicitud', methods=["PUT","GET"])
 def solicitud():
     '''
     En esta ruta pertenece a la peticion de actualizacion de datos, se debe diligenciar el formulario para asi ser enviado via correo al usuario que registro a dicho empleado. Se podra cancelar con el boton devolver el cual nos regresa al dashboard de tipo empleado.
     '''
-    return render_template("solicitud.html")
+    return render_template("solicitud.html",perfil=session["foto"])
 
 
 #politicas
@@ -400,7 +404,7 @@ def buscar(cedula):
                             return redirect("/dashboard")
                         else:
                             imagen = usuario["foto"]
-                            return render_template("dashboard.html",nombre=nombres, rol=rol,target=target, row = row, Unombre=usuario["nombre"],edad=usuario["edad"],sexo=usuario["sexo"],cedula=usuario["CC"],nacimiento=usuario["fecha_nacimiento"],estado=usuario["estado_civil"],celular=usuario["celular"],direccion=usuario["direccion"],email=usuario["email"],ingreso=usuario["fecha_ingreso"],termino=usuario["fecha_termino"],tipo=usuario["tipo_contrato"],salario=usuario["salario"],Rol=roles[usuario["rol"]].lower(),disponible=disponible[usuario["disponibilidad"]],imagen=imagen)
+                            return render_template("dashboard.html",nombre=nombres, rol=rol,target=target, row = row, Unombre=usuario["nombre"],edad=usuario["edad"],sexo=usuario["sexo"],cedula=usuario["CC"],nacimiento=usuario["fecha_nacimiento"],estado=usuario["estado_civil"],celular=usuario["celular"],direccion=usuario["direccion"],email=usuario["email"],ingreso=usuario["fecha_ingreso"],termino=usuario["fecha_termino"],tipo=usuario["tipo_contrato"],salario=usuario["salario"],Rol=roles[usuario["rol"]].lower(),disponible=disponible[usuario["disponibilidad"]],imagen=imagen,perfil=session["foto"])
                 except Error as er:
                     print('SQLite error: %s' % (' '.join(er.args)))
             else:
