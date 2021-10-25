@@ -45,7 +45,7 @@ def login():
             try:
                 with sqlite3.connect('joseCuervoDB.db') as con:
                     cur = con.cursor()
-                    cur.execute("SELECT contraseña,rol,nombre,apellido,email,foto FROM usuario WHERE CC = ?", [usuario])
+                    cur.execute("SELECT contraseña,rol,nombre,apellido,email,foto FROM usuario WHERE CC = ? AND disponibilidad=?", [usuario,1])
                     row = cur.fetchone()
                     if row is None:
                         flash("Usuario no encontrado","error")
@@ -113,9 +113,9 @@ def dashboard():
                         con.row_factory = sqlite3.Row 
                         cur = con.cursor()
                         if session["rol"] == 2:
-                            cur.execute("SELECT CC,nombre,foto,apellido FROM usuario WHERE CC != ? AND rol = ?",[session["usuario"],3])
+                            cur.execute("SELECT CC,nombre,foto,apellido FROM usuario WHERE CC != ? AND rol = ? AND disponibilidad=?",[session["usuario"],3,1])
                         else: 
-                            cur.execute("SELECT CC,nombre,foto,apellido FROM usuario WHERE CC != ?",[session["usuario"]])
+                            cur.execute("SELECT CC,nombre,foto,apellido FROM usuario WHERE CC != ? AND disponibilidad=?",[session["usuario"],1])
                             
                         row = cur.fetchall()
                 except Error  as er:
@@ -126,7 +126,26 @@ def dashboard():
                 return redirect("/empleado")
 
         if request.method == "POST":
-            return render_template("dashboard.html",nombre=session["nombre"], rol=rol,perfil=session["foto"])
+            cedula = escape(request.form["disponibilidad__cedula"])
+
+            try:
+                with sqlite3.connect('joseCuervoDB.db') as con:
+                    con.row_factory = sqlite3.Row 
+                    cur = con.cursor()
+                    if session["rol"] == 1:
+                        cur.execute("UPDATE usuario SET disponibilidad=?  WHERE CC=?",[0,cedula])
+                    else:
+                        cur.execute("UPDATE usuario SET disponibilidad=?  WHERE CC=? AND rol=?",[0,cedula,3])
+                    con.commit()
+                    if con.total_changes > 0:
+                        flash("Eliminado con exito","info")
+                        return redirect("/dashboard")
+                    else:
+                        flash("No se pudo eliminar","error")
+                        return redirect("/dashboard")
+            except Error  as er:
+                print('SQLite error: %s' % (' '.join(er.args)))
+                return redirect("/dashboard")
     else:
         return redirect("/")
 
@@ -219,7 +238,7 @@ def actualizar_usuario(cedula):
                 with sqlite3.connect('joseCuervoDB.db') as con:
                     con.row_factory = sqlite3.Row 
                     cur = con.cursor()
-                    cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=?",[str(cedula)])
+                    cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=? AND disponibilidad=?",[str(cedula),1])
                     usuario = cur.fetchone()
 
                     if usuario is None:
@@ -307,10 +326,10 @@ def calificar(cedula):
                         cur = con.cursor()
                         
                         if session["rol"] == 3:
-                            cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=? AND rol=?",(str(cedula),3))
+                            cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=? AND rol=? AND disponibilidad=?",(str(cedula),3,1))
                             usuario = cur.fetchone()
                         else: 
-                            cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=?",[str(cedula)])
+                            cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=?  AND disponibilidad=?",[str(cedula),1])
                             usuario = cur.fetchone()
 
                         if usuario is None:
@@ -354,7 +373,7 @@ def empleado():
     En esta ruta pertenece al usuario de tipo empleado
     en esta podra consultar toda su informacion personal, ademas podra generar una peticion de actualizacion de datos.
     '''
-    if "usuario" in  session:
+    if "usuario" in  session and session["rol"] == 3:
         rol = roles[session["rol"]]
         nombres = session["nombre"] + " " + session["apellido"]
         nombres = nombres.upper()
@@ -366,20 +385,26 @@ def empleado():
                     cur = con.cursor()
                     
                     if session["rol"] == 3:
-                        cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=?" ,[str(session["usuario"])])
+                        cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=? AND disponibilidad=?" ,[str(session["usuario"]),1])
                         usuario = cur.fetchone()
+                    
+                        if usuario is None:
+                            return redirect("/login")
+                        else:
+                            cur.execute("SELECT comentario,fecha,calificacion FROM calificaciones_usuario WHERE usuario=?",[str(session["usuario"])])
+                            calificaciones = cur.fetchall()
 
-                    if usuario is None:
-                        return redirect("/login")
-                    else:
-                        cur.execute("SELECT comentario,fecha,calificacion FROM calificaciones_usuario WHERE usuario=?",[str(session["usuario"])])
-                        calificaciones = cur.fetchall()
-
-                        return render_template("vistaEmpleado.html",nombre=nombres, rol=rol,Unombre=usuario["nombre"],apellido=usuario["apellido"],edad=usuario["edad"],sexo=usuario["sexo"],cedula=usuario["CC"],nacimiento=usuario["fecha_nacimiento"],estado=usuario["estado_civil"],celular=usuario["celular"],direccion=usuario["direccion"],email=usuario["email"],ingreso=usuario["fecha_ingreso"],termino=usuario["fecha_termino"],tipo=usuario["tipo_contrato"],salario=usuario["salario"],cargo=roles[usuario["rol"]].lower(),disponible=disponible[usuario["disponibilidad"]],cali=calificaciones,imagen=usuario["foto"],perfil=session["foto"])
+                            return render_template("vistaEmpleado.html",nombre=nombres, rol=rol,Unombre=usuario["nombre"],apellido=usuario["apellido"],edad=usuario["edad"],sexo=usuario["sexo"],cedula=usuario["CC"],nacimiento=usuario["fecha_nacimiento"],estado=usuario["estado_civil"],celular=usuario["celular"],direccion=usuario["direccion"],email=usuario["email"],ingreso=usuario["fecha_ingreso"],termino=usuario["fecha_termino"],tipo=usuario["tipo_contrato"],salario=usuario["salario"],cargo=roles[usuario["rol"]].lower(),disponible=disponible[usuario["disponibilidad"]],cali=calificaciones,imagen=usuario["foto"],perfil=session["foto"])
+                    else :
+                        return redirect("/")
+                    
             except Error as er:
                 print('SQLite error: %s' % (' '.join(er.args)))
+                return redirect("/")
         else:
             return redirect("/empleado")
+    else:
+        return redirect("/")
 
         
 
@@ -388,7 +413,12 @@ def solicitud():
     '''
     En esta ruta pertenece a la peticion de actualizacion de datos, se debe diligenciar el formulario para asi ser enviado via correo al usuario que registro a dicho empleado. Se podra cancelar con el boton devolver el cual nos regresa al dashboard de tipo empleado.
     '''
-    return render_template("solicitud.html",perfil=session["foto"])
+    if "usuario" in session and session["rol"] == 3:
+        nombres = session["nombre"] + " " + session["apellido"]
+        nombres = nombres.upper()
+        return render_template("solicitud.html",perfil=session["foto"],nombre=nombres,rol=roles[session["rol"]])
+    else:
+        return redirect("/")
 
 
 #politicas
@@ -399,7 +429,7 @@ def politicas():
     '''
     return render_template("politicas.html")
 
-@app.route("/dashboard/<int:cedula>", methods=['GET'])
+@app.route("/dashboard/<int:cedula>", methods=['GET',"POST"])
 def buscar(cedula):
     if "usuario" in session:
         # print(request.path.split('/')[2])
@@ -407,6 +437,29 @@ def buscar(cedula):
         target = "USUARIOS"
         if session["rol"] == 2:
             target = "EMPLEADOS"
+
+        if request.method == "POST":
+            cedula = escape(request.form["disponibilidad__cedula"])
+
+            try:
+                with sqlite3.connect('joseCuervoDB.db') as con:
+                    con.row_factory = sqlite3.Row 
+                    cur = con.cursor()
+                    if session["rol"] == 1:
+                        cur.execute("UPDATE usuario SET disponibilidad=?  WHERE CC=?",[0,cedula])
+                    else:
+                        cur.execute("UPDATE usuario SET disponibilidad=?  WHERE CC=? AND rol=?",[0,cedula,3])
+                    con.commit()
+                    if con.total_changes > 0:
+                        flash("Eliminado con exito","info")
+                        return redirect(f"/dashboard/{cedula}")
+                    else:
+                        flash("No se pudo eliminar","error")
+                        return redirect(f"/dashboard/{cedula}")
+            except Error  as er:
+                print('SQLite error: %s' % (' '.join(er.args)))
+                return redirect("/dashboard")
+
 
         if request.method == "GET":
 
@@ -418,13 +471,13 @@ def buscar(cedula):
                     with sqlite3.connect('joseCuervoDB.db') as con:
                         con.row_factory = sqlite3.Row 
                         cur = con.cursor()
-                        cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=?",[str(cedula)])
+                        cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=? AND disponibilidad=?",[str(cedula),1])
                         usuario = cur.fetchone()
 
                         if session["rol"] == 2:
-                            cur.execute("SELECT CC,nombre,foto,apellido FROM usuario WHERE CC != ? AND rol = ?",[session["usuario"],3])
+                            cur.execute("SELECT CC,nombre,foto,apellido FROM usuario WHERE CC != ? AND rol = ? AND disponibilidad=?",[session["usuario"],3,1])
                         else: 
-                            cur.execute("SELECT CC,nombre,foto,apellido FROM usuario WHERE CC != ?",[session["usuario"]])
+                            cur.execute("SELECT CC,nombre,foto,apellido FROM usuario WHERE CC != ? AND disponibilidad=?",[session["usuario"],1])
 
                         row = cur.fetchall()
 
