@@ -1,3 +1,8 @@
+const activo = document.getElementById('contenedor-nuevo');
+const cancelar = document.getElementById('button-close-disponible');
+const input_delete =document.getElementsByName('disponibilidad__cedula')[0];
+const formulario_delete = document.getElementById('form_disponible');
+
 function buscar() {
   var input, filter, table, li, i, txtValue;
   input = document.getElementById("search-box");
@@ -30,3 +35,21 @@ if (url != undefined){
   calificar.href = `/calificar/${url}`
 }
 
+
+function disponible(cc) {
+  activo.classList.add('showeditar');
+  document.getElementById("txt_disponible").innerHTML = `Confirme la cedula ${cc} para eliminar al usuario`;
+  input_delete.placeholder  = cc;
+}
+
+cancelar.addEventListener("click", () => {
+	activo.classList.remove("showeditar");
+});
+
+formulario_delete.addEventListener("submit",(e)=>{
+  let a = input_delete.value;
+  e.preventDefault();
+  if (a == input_delete.placeholder){
+    formulario_delete.submit();
+  }
+});

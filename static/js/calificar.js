@@ -7,6 +7,14 @@ const expresiones = {
 	fecha : /^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/
 }
 
+
+const cancelar = document.getElementById('button-close-campos');
+const modal = document.getElementById('contenedor-eliminar');
+cancelar.addEventListener("click", () => {
+	modal.classList.remove("showeliminar")
+});
+
+
 const campos = {
     comentario: false,
     fecha: false,
@@ -54,5 +62,8 @@ formulario.addEventListener('submit', (e) => {
 	e.preventDefault();
 	if (campos.comentario && campos.fecha){
 		formulario.submit();
+	}else{
+		document.getElementById("sms").innerText = "Campos vacios o invalidos, por favor verificar antes de enviar";
+		modal.classList.add("showeliminar");
 	}
 });

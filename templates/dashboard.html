@@ -13,7 +13,6 @@
                 <input type="text" name="" onkeyup="buscar()" id="search-box" placeholder="Cedula">
             </div>
         </div>
-
         <ul id="tabla">
             <!-- <li>
                 <div class="user">
@@ -51,7 +50,7 @@
                             <img src="{{ url_for('static', filename='imgs/eye.svg') }}" alt="">
                         </a>
 
-                        <a class="delete">
+                        <a class="delete" onclick="disponible('{{r[0]}}')">
                             <img src="{{ url_for('static', filename='imgs/delete.svg') }}" alt="">
                         </a>
                     </div>

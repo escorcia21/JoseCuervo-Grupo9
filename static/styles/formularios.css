@@ -116,14 +116,13 @@ input:focus,select:focus {
     border: 0;
     display: none;
 }
-
+/* 
 .bottom {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     justify-items: center;
     grid-template-rows: auto;
-    /* height: 12rem; */
-}
+} */
 
 .rol-perfil{
     margin-top: 1.6rem;
@@ -189,4 +188,15 @@ a {
     align-items: center;
     justify-content: center;
     text-decoration: none;
+}
+
+@media screen and (max-width:500px) {
+    
+    .informacion-personal, 
+    .informacion-laboral,
+    .archivos {
+        display: grid;
+        grid-template-columns: repeat(auto-fill,minmax(200px,1fr));
+        justify-items: center;
+    }
 }

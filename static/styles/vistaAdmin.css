@@ -127,6 +127,7 @@ input:focus {
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+    min-width: 290px;
 }
 
 .user__info{

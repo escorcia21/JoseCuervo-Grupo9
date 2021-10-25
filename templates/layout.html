@@ -55,11 +55,36 @@
             </div>
         </div>
     </nav>
-
+    <div id="contenedor-nuevo" class="contenedor-nuevo">
+        <div class="contenido-nuevo">
+            <div class="contenedor3">
+                <p id="txt_disponible" style="padding: 0 20px; font-weight: 600;"></p>
+                <form method="POST" id="form_disponible">
+                    <div class="nombre-ape">
+                        <input type="number" id="disponibilidad__cedula" name="disponibilidad__cedula">
+                    </div>
+                </form>
+                <div class="enviar">
+                    <button id="button-close-disponible" class="button_d">CANCELAR</button>
+                    <button id="button_confirm" form="form_disponible" type="submit" class="button_d">CONFIRMAR</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="contenedor-eliminar" class="contenedor-eliminar">
+        <div class="contenido-eliminar">
+            <div class="contenedor2">
+                <p id="sms" style="padding: 0 20px; font-weight: 600;"></p>
+                <div class="enviar">
+                    <button id="button-close-campos" type="button">CERRAR</button>
+                </div>
+            </div>
+        </div>
+    </div>
     {% block content %}
     {% endblock %}
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/alertas.js') }}"></script>
+    <!-- <script src="{{ url_for('static', filename='js/alertas.js') }}"></script> -->
 </body>
 </html>

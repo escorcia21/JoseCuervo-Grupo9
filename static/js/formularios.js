@@ -13,6 +13,14 @@ const expresiones = {
 	fecha : /^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/
 }
 
+const cancelar_campos = document.getElementById('button-close-campos');
+const modal = document.getElementById('contenedor-eliminar');
+cancelar_campos.addEventListener("click", () => {
+	modal.classList.remove("showeliminar")
+});
+
+
+
 var campos = {
 	nombre: false,
 	apellido: false,
@@ -128,5 +136,8 @@ formulario.addEventListener('submit', (e) => {
 	e.preventDefault();
 	if (campos.nombre && campos.apellido&& campos.cedula && campos.celular && campos.email && campos.direccion  && campos.ingreso && campos.nacimiento && campos.termino && campos.salario && campos.edad ){
 		formulario.submit();
+	}else{
+		document.getElementById("sms").innerText = "Campos vacios o invalidos, por favor verificar antes de enviar";
+		modal.classList.add("showeliminar");
 	}
 });
