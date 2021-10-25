@@ -10,11 +10,11 @@
 <main>
     <div class="info-empleado">
         <div class="empleado-info">
-            <img src="{{ url_for('static', filename='imgs/dafault.png') }}" alt="">
+            <img src="{{ url_for('static', filename=perfil) }}" alt="">
             <div class="Admin-info-ocupacion">
-                <p id="Enombre">Oscar Correa</p>
-                <p class="cedula">102453612</p>
-                <p class="ocupacion">Programador</p>
+                <p id="Enombre">{{Unombre}}</p>
+                <p class="cedula">{{cedula}}</p>
+                <p class="sexo">{{sexo}}</p>
             </div>
         </div>
         <div class="info-calificacion">
@@ -22,72 +22,65 @@
             <div class="izq">
                 <div>
                     <p class="titulo">Fecha de nacimiento</p>
-                    <p></p>
+                    <p>{{nacimiento}}</p>
                 </div>
                 <div>
                     <p class="titulo">Edad</p>
-                    <p></p>
+                    <p>{{edad}}</p>
                 </div>
                 <div>
                     <p class="titulo">Estado civil</p>
-                    <p></p>
+                    <p>{{estado}}</p>
                 </div>
                 <div>
                     <p class="titulo">Celular</p>
-                    <p></p>
+                    <p>{{celular}}</p>
                 </div>
                 <div>
                     <p class="titulo">Dirección</p>
-                    <p></p>
+                    <p>{{direccion}}</p>
                 </div>
                 <div>
                     <p class="titulo">Email</p>
-                    <p></p>
+                    <p>{{email}}</p>
                 </div>
             </div>
             <div class="der">
                 <div>
                     <p class="titulo">Fecha de ingreso</p>
-                    <p></p>
+                    <p>{{ingreso}}</p>
                 </div>
                 <div>
                     <p class="titulo">Fecha de termino</p>
-                    <p></p>
+                    <p>{{termino}}</p>
                 </div>
                 <div>
                     <p class="titulo">Tipo de contrato</p>
-                    <p></p>
+                    <p>{{tipo}}</p>
                 </div>
                 <div>
                     <p class="titulo">Salario</p>
-                    <p></p>
+                    <p>{{salario}}</p>
                 </div>
                 <div>
                     <p class="titulo">Rol</p>
-                    <p></p>
+                    <p>{{rol}}</p>
                 </div>
                 <div>
                     <p class="titulo">Disponibilidad</p>
-                    <p></p>
+                    <p>{{disponible}}</p>
                 </div>
             </div>
 
             <ul id="calificaciones">
+                {% for r in cali %}
                 <li>
                     <div class="calificaciones">
-                        <p class="fecha">octubre 2021</p><p class="comentarios">Excelente desempeño</p>
+                        <p class="fecha">{{r["calificacion"]}} | {{r["fecha"]}}</p>
+                        <p class="comentarios">{{r["comentario"]}}</p>
                     </div>
                 </li>
-                <li>
-                    <div class="calificaciones">
-                        <p class="fecha">octubre 2021</p><p class="comentarios">Excelente desempeño</p>
-                    </div>
-                </li>
-                <li>
-                    <div class="calificaciones">
-                        <p class="fecha">octubre 2021</p><p class="comentarios">Lorem ipsum dolor sit amet consectetur adipisicing elit. Impedit, animi, corrupti consequatur nihil quae minus omnis nobis voluptatem nemo sapiente placeat unde velit maxime voluptate eveniet porro ratione fugiat dolorum?</p>
-                    </div>
-                </li>
+                {% endfor %}
             </ul>
 
         </div>
