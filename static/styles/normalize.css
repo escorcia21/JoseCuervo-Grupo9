@@ -22,13 +22,17 @@
     padding: 0;
     color: var(--secondary-color);
 }
-
+p {
+    
+    word-break: break-all;
+    white-space: normal;
+}
 /* scrollbar */
 
 /* width */
 ::-webkit-scrollbar {
     width: 10px;
-    
+    height: 10px;  
 }
 
 /* Track */

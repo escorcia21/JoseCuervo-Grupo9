@@ -64,9 +64,15 @@ main{
     font-size: 1.2rem;
 }
 
+.izq div {
+    margin-top: 8px;
+}
+
 .izq p,.der p {
     height: 2rem;
     padding: 20px 0;
+    word-break: break-all;
+    white-space: normal;
 }
 
 .izq p + p,.der p + p{

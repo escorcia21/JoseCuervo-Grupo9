@@ -1,5 +1,5 @@
 main {
-    width: 100vw;
+    width: 100%;
     min-height: calc(100vh - 80px); 
     display: grid;
     grid-template-columns: minmax(500px, 2fr) minmax(700px, 3fr);
@@ -245,7 +245,7 @@ input:focus {
 }
 
 .izq p,.der p {
-    height: 2rem;
+    min-height: 2rem;
 }
 
 .izq p + p,.der p + p{
@@ -326,6 +326,10 @@ a {
 
     .tabla-usuarios-top {
         height: 50px;
+    }
+
+    .tabla-usuarios-top label {
+        font-size: 1rem;
     }
 
     .tabla-usuario-boton {

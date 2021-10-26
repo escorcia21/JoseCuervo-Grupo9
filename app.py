@@ -34,7 +34,6 @@ def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
 # inicios de session y contraseña
 @app.route('/', methods=["POST","GET"])
 def login():
@@ -80,39 +79,6 @@ def login():
                 print('SQLite error: %s' % (' '.join(er.args)))
                 return render_template("login.html")
        
-# @app.route('/recuperar', methods=["POST","GET"])
-# def recuperar():
-#     '''
-#     En esta ruta se ingresaran las credenciales (cedula y correo) para asi poder recuperar tu contraseña estas credenciales se comprobaran y si estan correctas se le enviara un correo al solicitante con un nuevo link en el se le abrira otra pagina, en la cual este podra ingresar su nueva contraseña y confirmarla
-#     '''
-    
-#     if request.method == "GET": 
-#         return render_template("recuperar.html")
-
-
-#     if request.method == "POST":
-#         cedula = escape(request.form["cedula"])
-#         email = escape(request.form["email"])
-        
-#         try:
-#             with sqlite3.connect('joseCuervoDB.db') as con:
-#                 con.row_factory = sqlite3.Row 
-#                 cur = con.cursor()
-#                 cur.execute("SELECT CC,email  FROM usuario WHERE CC=? AND disponibilidad=? AND email=?",[str(cedula),1,email])
-#                 usuario = cur.fetchone()
-
-#                 if usuario is None:
-#                     flash("Credenciales invalidas","error")
-#                     return redirect("/")
-#                 else:
-#                     yag = yagmail.SMTP('josecuerv302', 'Mintic2022*') 
-#                     yag.send(to =email , subject = "Activa tu cuenta", contents = "Bienvenido, ingresa al siguiente link: http://127.0.0.1:5000/recuperar cuenta")
-#                     flash("Revisa tu correo para activar","info")
-#                     return redirect("/")
-#         except Exception as er:
-#             print(er)
-#             return redirect("/")
-
 @app.route('/restablecer', methods=["POST","GET"])
 def restablecer():
     '''
@@ -242,6 +208,7 @@ def registro():
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 filename = "profile/"+filename
             else:
+                filename="profile/default.png"
                 flash("No se subio la foto, extension no soportada","error")
 
 
@@ -324,6 +291,7 @@ def actualizar_usuario(cedula):
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                 filename = "profile/"+filename
             else:
+                filename="profile/default.png"
                 flash("No se subio la foto, extension no soportada","error")
 
 
@@ -411,7 +379,7 @@ def empleado():
     en esta podra consultar toda su informacion personal, ademas podra generar una peticion de actualizacion de datos.
     '''
     if "usuario" in  session and session["rol"] == 3:
-        rol = roles[session["rol"]]
+        rol = roles[session["rol"]].lower()
         nombres = session["nombre"] + " " + session["apellido"]
         nombres = nombres.upper()
     

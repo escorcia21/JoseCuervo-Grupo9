@@ -47,6 +47,7 @@ input {
     border-radius: 50px;
     height: 2rem;
     padding: 1rem 1rem;
+    background-color: transparent;
 }
 
 .correcto {
@@ -66,6 +67,7 @@ select {
     height: 2.4rem;
     padding: 0 1rem;
     font-size: 1.1rem;
+    background-color: transparent;
 }
 
 input:focus,select:focus {
@@ -198,5 +200,9 @@ a {
         display: grid;
         grid-template-columns: repeat(auto-fill,minmax(200px,1fr));
         justify-items: center;
+    }
+
+    .titulos{
+        text-align: center;
     }
 }
