@@ -9,12 +9,12 @@
     <title>JoseCuervo</title>
 <body>
     <div class="container">        
-        <form action="/restablecer" method="GET">
+        <form method="post">
             <img src="{{ url_for('static', filename='imgs/logojc.png') }}" alt="Logo" class="logo">
             <h3>Usuario</h3>
-            <input type="text"><br>
+            <input type="text" name="cedula"><br>
             <h3>Email</h3>
-            <input type="email"><br>
+            <input type="email" name="email"><br>
             <input class="button" type="submit" value="RECUPERAR">
         </form>
         <div class="info">

@@ -1,4 +1,6 @@
+from logging import error
 from flask import Flask, render_template,request, session,flash
+from flask_mail import Mail,Message
 import os
 
 # base de datos
@@ -7,15 +9,23 @@ from sqlite3 import Error
 
 #seguridad
 from markupsafe import escape
-import hashlib
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import redirect, secure_filename
 
-app = Flask(__name__)
+
 UPLOAD_FOLDER = 'static\profile'
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg'}
+
+app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = os.urandom( 24 )
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'josecuerv302@gmail.com'
+app.config['MAIL_PASSWORD'] = 'Mintic2022*'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
 
 roles = {1:"SUPERADMINISTRADOR",2:"ADMINISTRADOR",3:"EMPLEADO"}
 disponible = {1:"activo",0:"no activo"}
@@ -61,7 +71,7 @@ def login():
                             session["foto"] = row[5]
                             if (int(row[1]) == 1 or int(row[1]) == 2):
                                 return redirect("dashboard")
-                            elif (int(row[1]) == 3):
+                            else:
                                 return redirect("empleado")
                         else:
                             flash("Contraseña invalida","error")
@@ -70,13 +80,38 @@ def login():
                 print('SQLite error: %s' % (' '.join(er.args)))
                 return render_template("login.html")
        
+# @app.route('/recuperar', methods=["POST","GET"])
+# def recuperar():
+#     '''
+#     En esta ruta se ingresaran las credenciales (cedula y correo) para asi poder recuperar tu contraseña estas credenciales se comprobaran y si estan correctas se le enviara un correo al solicitante con un nuevo link en el se le abrira otra pagina, en la cual este podra ingresar su nueva contraseña y confirmarla
+#     '''
+    
+#     if request.method == "GET": 
+#         return render_template("recuperar.html")
 
-@app.route('/recuperar', methods=["POST","GET"])
-def recuperar():
-    '''
-    En esta ruta se ingresaran las credenciales (cedula y correo) para asi poder recuperar tu contraseña estas credenciales se comprobaran y si estan correctas se le enviara un correo al solicitante con un nuevo link en el se le abrira otra pagina, en la cual este podra ingresar su nueva contraseña y confirmarla
-    '''
-    return render_template("recuperar.html")
+
+#     if request.method == "POST":
+#         cedula = escape(request.form["cedula"])
+#         email = escape(request.form["email"])
+        
+#         try:
+#             with sqlite3.connect('joseCuervoDB.db') as con:
+#                 con.row_factory = sqlite3.Row 
+#                 cur = con.cursor()
+#                 cur.execute("SELECT CC,email  FROM usuario WHERE CC=? AND disponibilidad=? AND email=?",[str(cedula),1,email])
+#                 usuario = cur.fetchone()
+
+#                 if usuario is None:
+#                     flash("Credenciales invalidas","error")
+#                     return redirect("/")
+#                 else:
+#                     yag = yagmail.SMTP('josecuerv302', 'Mintic2022*') 
+#                     yag.send(to =email , subject = "Activa tu cuenta", contents = "Bienvenido, ingresa al siguiente link: http://127.0.0.1:5000/recuperar cuenta")
+#                     flash("Revisa tu correo para activar","info")
+#                     return redirect("/")
+#         except Exception as er:
+#             print(er)
+#             return redirect("/")
 
 @app.route('/restablecer', methods=["POST","GET"])
 def restablecer():
@@ -85,8 +120,14 @@ def restablecer():
 
     NOTA: esta vista solo se podra ver una vez enviado el link para el cambio de contraseña via correo
     '''
-    return render_template("restablecer.html")
+    if "usuario" in session:
+        if request.method == "GET":
+            return render_template("restablecer.html")
 
+        if request.method == "POST":
+            return redirect("/restablecer")
+    else:
+        return redirect("/")
 
 #vistas de administradores
 @app.route('/dashboard', methods=["GET","POST"])
@@ -218,9 +259,6 @@ def registro():
         
     else:
         return redirect("/")
-
-        
-    
 
 @app.route('/actualizar/<int:cedula>', methods=["POST","GET"])
 def actualizar_usuario(cedula):
@@ -365,7 +403,6 @@ def calificar(cedula):
     else:
         return redirect("/")
 
-
 # vistas de empleado
 @app.route('/empleado', methods=["GET"])
 def empleado():
@@ -406,9 +443,7 @@ def empleado():
     else:
         return redirect("/")
 
-        
-
-@app.route('/solicitud', methods=["PUT","GET"])
+@app.route('/solicitud', methods=["POST","GET"])
 def solicitud():
     '''
     En esta ruta pertenece a la peticion de actualizacion de datos, se debe diligenciar el formulario para asi ser enviado via correo al usuario que registro a dicho empleado. Se podra cancelar con el boton devolver el cual nos regresa al dashboard de tipo empleado.
@@ -416,10 +451,41 @@ def solicitud():
     if "usuario" in session and session["rol"] == 3:
         nombres = session["nombre"] + " " + session["apellido"]
         nombres = nombres.upper()
-        return render_template("solicitud.html",perfil=session["foto"],nombre=nombres,rol=roles[session["rol"]])
+
+        
+        with sqlite3.connect('joseCuervoDB.db') as con:
+            con.row_factory = sqlite3.Row 
+            cur = con.cursor()
+            cur.execute("SELECT CC,nombre,apellido,edad,estado_civil,celular,direccion,email,fecha_nacimiento,sexo FROM usuario WHERE CC=?",[str(session["usuario"])])
+            usuario = cur.fetchone()
+
+            if usuario is None:
+                return redirect("/solicitud")
+            else:
+                formulario = render_template("solicitud.html",perfil=session["foto"],nombre=nombres,rol=roles[session["rol"]],Unombre=usuario["nombre"],apellido=usuario["apellido"],edad=usuario["edad"],sexo=usuario["sexo"],cedula=usuario["CC"],nacimiento=usuario["fecha_nacimiento"],estado=usuario["estado_civil"],celular=usuario["celular"],direccion=usuario["direccion"],email=usuario["email"])
+
+                if request.method == "GET":
+                    return formulario
+
+                if request.method == "POST":
+                    nombre = escape(request.form["nombre"])
+                    nacimiento = escape(request.form["nacimiento"])
+                    estado_civil = escape(request.form["estado_civil"])
+                    apellido = escape(request.form["apellido"])
+                    edad = escape(request.form["edad"])
+                    email = escape(request.form["email"])
+                    cedula = escape(session["usuario"])
+                    celular = escape(request.form["celular"])
+                    direccion = escape(request.form["direccion"])
+                    sexo = escape(request.form["sexo"])
+                    cometarios = escape(request.form["cometarios"])
+                    msg = Message('Peticion de actualizacion de datos', sender = app.config['MAIL_USERNAME'], recipients = [session["email"]])
+                    msg.body = f"Nombre: {nombre} Apellido: {apellido} Edad: {edad}\nNacimiento: {nacimiento} Email: {email} Celular: {celular}\nCedula: {cedula} Dirección: {direccion} Estado civil: {estado_civil}\nSexo: {sexo}\n\nComentarios:\n{cometarios}"
+                    mail.send(msg)
+                    flash("Mensaje enviado con exito","info")
+                    return redirect("/empleado")
     else:
         return redirect("/")
-
 
 #politicas
 @app.route('/politicas',methods=["GET"])
@@ -492,7 +558,6 @@ def buscar(cedula):
                 return redirect("/empleado")
     else:
         return redirect("/")
-
 
 @app.route('/logout')
 def logout():

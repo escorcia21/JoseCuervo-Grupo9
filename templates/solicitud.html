@@ -8,61 +8,61 @@
 {% block content %}
 <main>
     <div class="form-container">
-        <form action="" method="POST">
+        <form action="" method="POST" id="formulario">
             <h1>Petición de actualización</h1>
             <p class="titulos">Datos personales</p>
             <div class="informacion-personal">
                 <div class="field-container">
                     <p class="titulo">Nombres</p>
-                    <input type="text">
+                    <input value="{{Unombre}}" type="text" name="nombre">
                 </div>
                 <div class="field-container">
                     <p class="titulo">Apellidos</p>
-                    <input type="text">
-                </div>
-                <div class="field-container">
-                    <p class="titulo">Fecha de nacimiento</p>
-                    <input type="date" name="" id="">
+                    <input value="{{apellido}}" type="text"  name="apellido">
                 </div>
                 <div class="field-container">
                     <p class="titulo">Edad</p>
-                    <input type="number" name="" id="">
+                    <input value="{{edad}}" type="number" name="edad" id="">
+                </div>
+                <div class="field-container">
+                    <p class="titulo">Sexo</p>
+                    <select name="sexo">
+                        <option value="Hombre">Hombre</option>
+                        <option value="Mujer">Mujer</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+                <div class="field-container">
+                    <p class="titulo">Fecha de nacimiento</p>
+                    <input value="{{nacimiento}}" type="date" name="nacimiento" id="">
+                </div>
+                <div class="field-container">
+                    <p class="titulo">Cedula</p>
+                    <input value="{{cedula}}" type="number" id="cc" name="cc">
                 </div>
                 <div class="field-container">
                     <p class="titulo">Estado civil</p>
-                    <input type="text">
-                </div>
-                <div class="field-container"> 
-                    <p class="titulo">Cedula</p>
-                    <input type="number" id="cc">
+                    <select name="estado_civil" >
+                        <option value="soltero">Soltero</option>
+                        <option value="casado">Casado</option>
+                    </select>
                 </div>
                 <div class="field-container">
                     <p class="titulo">Email</p>
-                    <input type="email">
+                    <input value="{{email}}" type="email" name="email">
                 </div>
                 <div class="field-container">
                     <p class="titulo">Celular</p>
-                    <input type="number" name="" id="">
+                    <input value="{{celular}}" type="number" name="celular">
                 </div>
                 <div class="field-container">
                     <p class="titulo">Dirección</p>
-                    <input type="text">
-                </div>
-            </div>
-            <p class="titulos">perfil</p>
-            <div class="archivos">
-                <div class="upload-foto">
-                    <p class="titulo">Foto de perfil</p>
-                    <label for="upload" id="lable-upload" class="upload-btn">
-                        <span id="txt">Sube una foto</span>
-                        <img src="{{ url_for('static', filename='imgs/upload.svg') }}" alt="">
-                    </label>
-                    <input type="file" name="upload" id="upload">
+                    <input value="{{direccion}}" type="text" name="direccion">
                 </div>
             </div>
             <p class="titulos">Cometarios</p>
             <div class="cometarios">
-                <textarea name="" id="" cols="30" rows="10">
+                <textarea name="comentarios" id="comentarios-area" cols="30" rows="10">
 
                 </textarea>
             </div>
@@ -73,5 +73,5 @@
         </form>
     </div>
 </main>
-<script src="{{ url_for('static', filename='js/formularios.js') }}"></script>
+<script src="{{ url_for('static', filename='js/solicitud.js') }}"></script>
 {% endblock %}
