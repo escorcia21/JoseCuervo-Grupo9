@@ -91,7 +91,38 @@ def restablecer():
             return render_template("restablecer.html")
 
         if request.method == "POST":
-            return redirect("/restablecer")
+            contraseña = escape(request.form["contraseña"])
+            confirmar_contraseña = escape(request.form["confirmar_contraseña"])
+            print(contraseña)
+            if contraseña.strip() == "" or confirmar_contraseña.strip() == "":
+                flash("Campos vacios","error")
+            elif contraseña.find(' ') > -1 or confirmar_contraseña.find(' ') > -1:
+                flash("Los campos no pueden tener espacios","error")
+            elif contraseña == confirmar_contraseña:
+                contraseña_hash = generate_password_hash(contraseña)
+                try:
+                    with sqlite3.connect('joseCuervoDB.db') as con:
+                        con.row_factory = sqlite3.Row 
+                        cur = con.cursor()
+                        cur.execute("UPDATE usuario SET contraseña=? WHERE CC=?" ,[contraseña_hash,str(session["usuario"])])
+                        con.commit()
+                        if con.total_changes > 0:
+                            msg = Message('Cambio de contraseña', sender = app.config['MAIL_USERNAME'], recipients = [session["email"]])
+                            msg.body = f"Se ha restablecido su contraseña."
+                            mail.send(msg)
+                            flash("Se ha cambiado la contraseña","info")
+                        else:
+                            flash("Ocurrio un error","error")
+                        return redirect("/empleado")
+                except Error  as er:
+                    flash("Ocurrio un error","error")
+                    print('SQLite error: %s' % (' '.join(er.args)))
+                    return redirect("/restablecer")
+            else:
+                flash("Las contraseñas no son iguales","error")
+                return render_template("restablecer.html")
+
+            return render_template("restablecer.html")
     else:
         return redirect("/")
 

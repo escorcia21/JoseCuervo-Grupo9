@@ -5,7 +5,7 @@ body{
 label{
     display: flex;
     height: 80px;
-    width: 100vw;
+    width: 100%;
     background-color:white;
     justify-content: center;
     align-items: center;
@@ -23,16 +23,14 @@ label{
 }
 
 
-div{
+.politicas {
     display: flex;
     background-color: white;
     border-radius: 20px;
-    padding: 0 0 40px 0;
     width: 90%;
     flex-direction: column;
     align-items: center;
-    margin: auto;
-    margin-top: 20px;
+    margin: 40px auto;
 }
 
 h2{
@@ -45,6 +43,69 @@ h2{
 h1{
     width: 90%;
     text-align: justify;
+}
+
+.botones {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    width: 100%;
+    background-color: transparent;
+}
+
+
+.botones {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    width: 100%;    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-direction: row;
+}
+
+
+.button {
+    border: 0;
+    border-radius: 25px;
+    height: 2.5rem;
+    width: 10rem;
+    color: var(--background-color);
+    background-color: var(--secondary-color);
+    font-weight: bold;
+    align-items: center;
+    margin: 0 4px;
+    
+}
+.button:hover{
+    cursor: pointer;
+    background-color: var(--secondary-color-dark);
+}
+
+#aceptar {
+    background: var(--main-color);
+    /* margin-left: 20px; */
+}
+
+#aceptar:hover {
+    background: var(--main-color-dark);
+}
+
+a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.aceptar {
+    padding-top: 20px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-items: center;
 }
 
 @media screen and (max-width: 560px){
