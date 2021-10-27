@@ -2,6 +2,7 @@ from logging import error
 from flask import Flask, render_template,request, session,flash
 from flask_mail import Mail,Message
 import os
+import uuid
 
 # base de datos
 import sqlite3
@@ -564,6 +565,107 @@ def logout():
         session.clear()
 
     return redirect("/")
+
+@app.route('/recuperar', methods=["POST","GET"])
+def recuperar():
+    '''
+    En esta ruta se ingresaran las credenciales (cedula y correo) para asi poder recuperar tu contraseña estas credenciales se comprobaran y si estan correctas se le enviara un correo al solicitante con un nuevo link en el se le abrira otra pagina, en la cual este podra ingresar su nueva contraseña y confirmarla
+    '''
+
+    if request.method == "GET": 
+        return render_template("recuperar.html")
+
+
+    if request.method == "POST":
+        cedula = escape(request.form["cedula"])
+        email = escape(request.form["email"])
+
+        if cedula.strip() == "" or email.strip() == "":
+            flash("Campos vacios","error")
+            return redirect("/recuperar")
+        elif cedula.find(' ') > -1 or email.find(' ') > -1:
+            flash("Los campos no pueden tener espacios","error")
+            return redirect("/recuperar")
+        else:
+            try:
+                with sqlite3.connect('joseCuervoDB.db') as con:
+                    con.row_factory = sqlite3.Row 
+                    cur = con.cursor()
+                    cur.execute("SELECT CC,email  FROM usuario WHERE CC=? AND disponibilidad=? AND email=?",[str(cedula),1,email])
+                    usuario = cur.fetchone()
+
+                    if usuario is None:
+                        flash("Credenciales invalidas","error")
+                        return redirect("/")
+                    else:
+                        token = str(uuid.uuid4()) + "-" + str(usuario["CC"])
+                        cur.execute("UPDATE usuario SET token=? WHERE CC=?" ,[token,str(usuario["CC"])])
+                        con.commit()
+                        if con.total_changes > 0:
+                            msg = Message('Cambio de contraseña', sender = app.config['MAIL_USERNAME'], recipients = [usuario["email"]])
+                            msg.body = f"Por favor ingresa al siguiente link para recuperar tu contraseña:\nhttp://127.0.0.1:5000/restablecer/{token}"
+                            mail.send(msg)
+                            flash("Revisa tu correo para recuperar tu contraseña","info")
+                        return redirect("/")
+            except Exception as er:
+                print(er)
+                return redirect("/")
+
+@app.route('/restablecer/<string:token>', methods=["POST","GET"])
+def olvidada(token):
+    '''
+    este esta ruta se podra ingresar su nueva contraseña y confirmarla acto seguido se cambiara la contraseña del usuario en la base de datos
+
+    NOTA: esta vista solo se podra ver una vez enviado el link para el cambio de contraseña via correo
+    '''
+    
+    if request.method == "GET":
+        return render_template("restablecer.html")
+
+    if request.method == "POST":
+        contraseña = escape(request.form["contraseña"])
+        confirmar_contraseña = escape(request.form["confirmar_contraseña"])
+        print(contraseña)
+        if contraseña.strip() == "" or confirmar_contraseña.strip() == "":
+            flash("Campos vacios","error")
+        elif contraseña.find(' ') > -1 or confirmar_contraseña.find(' ') > -1:
+            flash("Los campos no pueden tener espacios","error")
+        elif contraseña == confirmar_contraseña:
+            contraseña_hash = generate_password_hash(contraseña)
+            user = token.split("-")[5]
+            try:
+                with sqlite3.connect('joseCuervoDB.db') as con:
+                    con.row_factory = sqlite3.Row 
+                    cur = con.cursor()
+                    cur.execute("SELECT email  FROM usuario WHERE CC=?",[user])
+                    usuario = cur.fetchone()
+
+                    if usuario is None:
+                        flash("Ocurrio un error","error")
+                        return redirect("/")
+                    else:
+                        cur.execute("UPDATE usuario SET contraseña=?, token=? WHERE CC=? AND token=?" ,[contraseña_hash,"",str(user),token])
+                        con.commit()
+                        if con.total_changes > 0:
+                            msg = Message('Cambio de contraseña', sender = app.config['MAIL_USERNAME'], recipients = [usuario["email"]])
+                            msg.body = f"Se ha restablecido su contraseña."
+                            mail.send(msg)
+                            flash("Se ha cambiado la contraseña","info")
+                        else:
+                            flash("No se puedo combiar la contraseña","error")
+
+                        return redirect("/")
+            except Error  as er:
+                flash("Ocurrio un error","error")
+                print('SQLite error: %s' % (' '.join(er.args)))
+                return redirect("/")
+        else:
+            flash("Las contraseñas no son iguales","error")
+            return render_template("restablecer.html")
+
+        return render_template("restablecer.html")
+    
+
 
 if __name__ == "__main__":
     app.run(debug=True)

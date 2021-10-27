@@ -6,8 +6,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/normalize.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles/logins.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/alertas.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>JoseCuervo</title>
 <body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        
+        <ul  id="alert">
+            {% for category,message in messages %}
+                <li class="Message {{category}}">
+                    <div class="Message-icon">
+                        {% if category == 'error' %}
+                            <i class="fa fa-exclamation"></i>
+                        {% else %}
+                            <i class="fa fa-check"></i>
+                        {% endif %}
+                    </div>
+                    <div class="Message-body">
+                        <p>{{ message }}</p>
+                    </div>
+                    <button class="Message-close js-messageClose" onclick="this.parentElement.style.display='none';"><i class="fa fa-times"></i></button>
+                </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
     <div class="container">        
         <form method="post">
             <img src="{{ url_for('static', filename='imgs/logojc.png') }}" alt="Logo" class="logo">
@@ -17,9 +41,9 @@
             <input type="email" name="email"><br>
             <input class="button" type="submit" value="RECUPERAR">
         </form>
-        <div class="info">
+        <!-- <div class="infol">
             <p>&copy; 2021 Todos los derechos reservados.</p>             <p>Equipo 9 G35 Misiontic Uninorte</p>
-        </div>
+        </div> -->
     </div>
 </body>
 </html>
