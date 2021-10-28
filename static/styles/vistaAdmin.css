@@ -63,15 +63,20 @@ input:focus {
     height: 80%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    /* align-items: center; */
     overflow-y: scroll;
 }
 
 #tabla li{
-    width: 80%;
+    width: 100%;
     height: 4.2rem;
     /* padding: 0rem; */
     margin-top: 0.8rem;
+}
+
+#tabla li p{
+    word-break: break-all;
+    white-space: normal;
 }
 
 /* tabla - filas */
@@ -246,6 +251,8 @@ input:focus {
 
 .izq p,.der p {
     min-height: 2rem;
+    word-break: break-all;
+    white-space: normal;
 }
 
 .izq p + p,.der p + p{

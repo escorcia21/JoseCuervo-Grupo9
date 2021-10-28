@@ -17,14 +17,13 @@ const expresiones = {
 
 
 var campos = {
-	nombre: false,
-	apellido: false,
-	cedula: false,
-	celular: false,
-	edad: false,
-	email: false,
-	nacimiento: false,
-	direccion: false,
+	nombre: true,
+	apellido: true,
+	celular: true,
+	edad: true,
+	email: true,
+	nacimiento: true,
+	direccion: true,
 	comentarios: false
 }
 
@@ -38,9 +37,6 @@ const validarFormulario = (e) => {
             break;
         case "edad":
                 validarCampo(expresiones.edad, e.target, 'edad');
-            break;
-        case "cedula":
-                validarCampo(expresiones.numeros, e.target, 'cedula');
             break;
         case "email":
                 validarCampo(expresiones.correo, e.target, 'email');
@@ -94,7 +90,7 @@ textarea.addEventListener('blur', validarFormulario);
 
 formulario.addEventListener('submit', (e) => {
 	e.preventDefault();
-	if (campos.nombre && campos.apellido&& campos.cedula && campos.celular && campos.email && campos.direccion  && campos.nacimiento  && campos.edad   && campos.comentarios){
+	if (campos.nombre && campos.apellido && campos.celular && campos.email && campos.direccion  && campos.nacimiento  && campos.edad   && campos.comentarios){
 		formulario.submit();
 	}else{
 		document.getElementById("sms").innerText = "Campos vacios o invalidos, por favor verificar antes de enviar";

@@ -12,14 +12,14 @@
     display: table;
     position: relative;
     margin-bottom: 10px;
-    min-width: 260px;
+    min-width: 200px;
 }
 
 .Message-icon {
     display: table-cell;
     vertical-align: middle;
     width: 60px;
-    padding: 30px;
+    padding: 20px;
     text-align: center;
     background-color: rgba(1, 1, 1, 0.25);
     
@@ -36,7 +36,7 @@
 .Message-body {
     display: table-cell;
     vertical-align: middle;
-    padding: 30px 20px 30px 10px;
+    padding: 20px 40px 20px 10px;
 }    
 .Message-body > p {
     line-height: 1.2;

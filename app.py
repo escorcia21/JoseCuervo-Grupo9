@@ -265,7 +265,7 @@ def actualizar_usuario(cedula):
     En esta ruta se podran actualizar usuarios a la base de datos, se debe diligenciar los campos que se desean actualizar. Se podra cancelar con el boton devolver el cual nos regresa al dashboard
     '''
 
-    if "usuario" in session:
+    if "usuario" in session and cedula != int(session["usuario"]):
         rol = roles[session["rol"]]
         nombres = session["nombre"] + " " + session["apellido"]
         nombres = nombres.upper()
@@ -448,7 +448,7 @@ def solicitud():
     '''
     En esta ruta pertenece a la peticion de actualizacion de datos, se debe diligenciar el formulario para asi ser enviado via correo al usuario que registro a dicho empleado. Se podra cancelar con el boton devolver el cual nos regresa al dashboard de tipo empleado.
     '''
-    if "usuario" in session and session["rol"] == 3:
+    if "usuario" in session and (session["rol"] == 3 or session["rol"] == 2):
         nombres = session["nombre"] + " " + session["apellido"]
         nombres = nombres.upper()
 
@@ -456,7 +456,7 @@ def solicitud():
         with sqlite3.connect('joseCuervoDB.db') as con:
             con.row_factory = sqlite3.Row 
             cur = con.cursor()
-            cur.execute("SELECT CC,nombre,apellido,edad,estado_civil,celular,direccion,email,fecha_nacimiento,sexo FROM usuario WHERE CC=?",[str(session["usuario"])])
+            cur.execute("SELECT CC,nombre,apellido,edad,estado_civil,celular,direccion,email,fecha_nacimiento,sexo,registrador FROM usuario WHERE CC=?",[str(session["usuario"])])
             usuario = cur.fetchone()
 
             if usuario is None:
@@ -478,8 +478,8 @@ def solicitud():
                     celular = escape(request.form["celular"])
                     direccion = escape(request.form["direccion"])
                     sexo = escape(request.form["sexo"])
-                    cometarios = escape(request.form["cometarios"])
-                    msg = Message('Peticion de actualizacion de datos', sender = app.config['MAIL_USERNAME'], recipients = [session["email"]])
+                    cometarios = escape(request.form["comentarios"])
+                    msg = Message('Peticion de actualizacion de datos', sender = app.config['MAIL_USERNAME'], recipients = [usuario["registrador"]])
                     msg.body = f"Nombre: {nombre} Apellido: {apellido} Edad: {edad}\nNacimiento: {nacimiento} Email: {email} Celular: {celular}\nCedula: {cedula} Dirección: {direccion} Estado civil: {estado_civil}\nSexo: {sexo}\n\nComentarios:\n{cometarios}"
                     mail.send(msg)
                     flash("Mensaje enviado con exito","info")
@@ -537,8 +537,12 @@ def buscar(cedula):
                     with sqlite3.connect('joseCuervoDB.db') as con:
                         con.row_factory = sqlite3.Row 
                         cur = con.cursor()
-                        cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=? AND disponibilidad=?",[str(cedula),1])
-                        usuario = cur.fetchone()
+
+                        if cedula != int(session["usuario"]) :
+                            cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=? AND disponibilidad=?",[str(cedula),1])
+                            usuario = cur.fetchone()
+                        else:
+                            return redirect("/dashboard")
 
                         if session["rol"] == 2:
                             cur.execute("SELECT CC,nombre,foto,apellido FROM usuario WHERE CC != ? AND rol = ? AND disponibilidad=?",[session["usuario"],3,1])
@@ -554,6 +558,7 @@ def buscar(cedula):
                             return render_template("dashboard.html",nombre=nombres, rol=rol,target=target, row = row, Unombre=usuario["nombre"],edad=usuario["edad"],sexo=usuario["sexo"],cedula=usuario["CC"],nacimiento=usuario["fecha_nacimiento"],estado=usuario["estado_civil"],celular=usuario["celular"],direccion=usuario["direccion"],email=usuario["email"],ingreso=usuario["fecha_ingreso"],termino=usuario["fecha_termino"],tipo=usuario["tipo_contrato"],salario=usuario["salario"],Rol=roles[usuario["rol"]].lower(),disponible=disponible[usuario["disponibilidad"]],imagen=imagen,perfil=session["foto"])
                 except Error as er:
                     print('SQLite error: %s' % (' '.join(er.args)))
+                    return redirect("/dashboard")
             else:
                 return redirect("/empleado")
     else:
@@ -664,8 +669,44 @@ def olvidada(token):
             return render_template("restablecer.html")
 
         return render_template("restablecer.html")
-    
 
+@app.route('/administrador', methods=["GET"])
+def administrador():
+    '''
+    En esta ruta pertenece al usuario de tipo empleado
+    en esta podra consultar toda su informacion personal, ademas podra generar una peticion de actualizacion de datos.
+    '''
+    if "usuario" in  session and session["rol"] == 2:
+        rol = roles[session["rol"]].lower()
+        nombres = session["nombre"] + " " + session["apellido"]
+        nombres = nombres.upper()
+    
+        if request.method == "GET":
+            try:
+                with sqlite3.connect('joseCuervoDB.db') as con:
+                    con.row_factory = sqlite3.Row 
+                    cur = con.cursor()
+                    
+
+                    cur.execute("SELECT CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,apellido,fecha_nacimiento,sexo FROM usuario WHERE CC=?" ,[str(session["usuario"])])
+                    usuario = cur.fetchone()
+                
+                    if usuario is None:
+                        return redirect("/")
+                    else:
+                        cur.execute("SELECT comentario,fecha,calificacion FROM calificaciones_usuario WHERE usuario=?",[str(session["usuario"])])
+                        calificaciones = cur.fetchall()
+
+                        return render_template("vistaEmpleado.html",nombre=nombres, rol=rol,Unombre=usuario["nombre"],apellido=usuario["apellido"],edad=usuario["edad"],sexo=usuario["sexo"],cedula=usuario["CC"],nacimiento=usuario["fecha_nacimiento"],estado=usuario["estado_civil"],celular=usuario["celular"],direccion=usuario["direccion"],email=usuario["email"],ingreso=usuario["fecha_ingreso"],termino=usuario["fecha_termino"],tipo=usuario["tipo_contrato"],salario=usuario["salario"],cargo=roles[usuario["rol"]].lower(),disponible=disponible[usuario["disponibilidad"]],cali=calificaciones,imagen=usuario["foto"],perfil=session["foto"])
+                    
+                    
+            except Error as er:
+                print('SQLite error: %s' % (' '.join(er.args)))
+                return redirect("/")
+        else:
+            return redirect("/dashboard")
+    else:
+        return redirect("/")
 
 if __name__ == "__main__":
     app.run(debug=True)

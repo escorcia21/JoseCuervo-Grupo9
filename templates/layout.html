@@ -38,7 +38,9 @@
 
     <nav class="top">
         <div class="navegacion">
-            <label id="logo">JOSE<span>CUERVO</span></label>
+            <a href="/dashboard">
+                <label id="logo">JOSE<span>CUERVO</span></label>
+            </a>
             <div class="menu"> 
                 <div class="cuenta">
                     <img src="{{ url_for('static', filename=perfil) }}" alt="foto" id="perfil">
@@ -49,7 +51,9 @@
                     <img src="{{ url_for('static', filename='imgs/downtriangle.svg') }}" alt="icono" id="iconT">
                 </div>
                 <div class="desplegable">
-                    <a href="#">Mi cuenta</a>
+                    {% if session["rol"]==2 %}
+                        <a href="/administrador">Mi cuenta</a>
+                    {% endif %}
                     <a href="/restablecer">Cambiar contraseña</a>
                     <a href="/logout">Salir</a>
                 </div>
