@@ -13,7 +13,7 @@ from markupsafe import escape
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import redirect, secure_filename
 
-DOMAIN = 'http://127.0.0.1:5000/'
+DOMAIN = 'https://josecuervo.herokuapp.com/'
 UPLOAD_FOLDER = 'static\profile'
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg'}
 
