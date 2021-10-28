@@ -13,7 +13,7 @@ from markupsafe import escape
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import redirect, secure_filename
 
-
+DOMAIN = 'http://127.0.0.1:5000/'
 UPLOAD_FOLDER = 'static\profile'
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg'}
 
@@ -221,7 +221,6 @@ def registro():
             termino = escape(request.form["termino"])
             salario = escape(request.form["salario"])
             tipo = escape(request.form["tipo"])
-            disponibilidad = escape(request.form["disponibilidad"])
             if session["rol"] == 2:
                 rol = 3
             else:
@@ -231,24 +230,29 @@ def registro():
 
             file = request.files['archivo']
             filename = secure_filename(file.filename)
-            if filename=="":
-                filename="profile/default.png"
-            elif file and allowed_file(filename):
-                filename = filename.rsplit('.', 1)
-                filename[0] = str(cedula)
-                filename = filename[0]+"."+filename[1]
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                filename = "profile/"+filename
-            else:
-                filename="profile/default.png"
-                flash("No se subio la foto, extension no soportada","error")
-
 
             try:
                 with sqlite3.connect('joseCuervoDB.db') as con:
+                    if filename=="":
+                        filename="profile/default.png"
+                    elif file and allowed_file(filename):
+                        filename = filename.rsplit('.', 1)
+                        filename[0] = str(cedula)
+                        filename = filename[0]+"."+filename[1]
+                        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                        filename = "profile/"+filename
+                    else:
+                        filename="profile/default.png"
+                        flash("No se subio la foto, extension no soportada","error")
+
                     cur = con.cursor()
-                    cur.execute("INSERT INTO usuario (CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,disponibilidad,foto,contraseña,primera_vez,registrador,apellido,fecha_nacimiento,sexo) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (cedula,nombre,edad,estado_civil,celular,direccion,email,ingreso,termino,tipo,salario,rol,disponibilidad,filename,cedulahash,1,session["email"],apellido,nacimiento,sexo))
+                    cur.execute("INSERT INTO usuario (CC,nombre,edad,estado_civil,celular,direccion,email,fecha_ingreso,fecha_termino,tipo_contrato,salario,rol,foto,contraseña,registrador,apellido,fecha_nacimiento,sexo,disponibilidad) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", (cedula,nombre,edad,estado_civil,celular,direccion,email,ingreso,termino,tipo,salario,rol,filename,cedulahash,session["email"],apellido,nacimiento,sexo,1))
                     con.commit()
+
+                    msg = Message('Registro exitoso', sender = app.config['MAIL_USERNAME'], recipients = [email])
+                    msg.body = f"Su registro ha sido exitoso en la pagina de jose cuervo, para ingresar debe colocar su numero de cedula tanto en el usuario como en la contraseña.\n{DOMAIN}"
+                    mail.send(msg)
+
                     flash("Registrado con exito","info")
                     return redirect('/dashboard')
             except Error as er:
@@ -305,7 +309,6 @@ def actualizar_usuario(cedula):
             termino = escape(request.form["termino"])
             salario = escape(request.form["salario"])
             tipo = escape(request.form["tipo"])
-            udisponibilidad = escape(request.form["disponibilidad"])
             if session["rol"] == 1:
                 urol = escape(request.form["select"])
             else:
@@ -314,25 +317,30 @@ def actualizar_usuario(cedula):
             
             file = request.files['archivo']
             filename = secure_filename(file.filename)
-            if filename=="":
-                filename="profile/default.png"
-            elif file and allowed_file(filename):
-                filename = filename.rsplit('.', 1)
-                filename[0] = str(cedula)
-                filename = filename[0]+"."+filename[1]
-                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                filename = "profile/"+filename
-            else:
-                filename="profile/default.png"
-                flash("No se subio la foto, extension no soportada","error")
-
 
             try :
                 with sqlite3.connect('joseCuervoDB.db') as con:
+                    
+                    if filename=="":
+                        filename="profile/default.png"
+                    elif file and allowed_file(filename):
+                        filename = filename.rsplit('.', 1)
+                        filename[0] = str(cedula)
+                        filename = filename[0]+"."+filename[1]
+                        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                        filename = "profile/"+filename
+                    else:
+                        filename="profile/default.png"
+                        flash("No se subio la foto, extension no soportada","error")
+
                     cur = con.cursor()
-                    cur.execute('UPDATE usuario SET nombre=?,edad=?,estado_civil=?,celular=?,direccion=?,email=?,fecha_ingreso=?,fecha_termino=?,tipo_contrato=?,salario=?,rol=?,disponibilidad=?,foto=?,apellido=?,fecha_nacimiento=?,sexo=? WHERE CC=?',(nombre,edad,estado_civil,celular,direccion,email,ingreso,termino,tipo,salario,urol,udisponibilidad,filename,apellido,nacimiento,sexo,cedula))
+                    cur.execute('UPDATE usuario SET nombre=?,edad=?,estado_civil=?,celular=?,direccion=?,email=?,fecha_ingreso=?,fecha_termino=?,tipo_contrato=?,salario=?,rol=?,foto=?,apellido=?,fecha_nacimiento=?,sexo=? WHERE CC=?',(nombre,edad,estado_civil,celular,direccion,email,ingreso,termino,tipo,salario,urol,filename,apellido,nacimiento,sexo,cedula))
                     con.commit()
                     if con.total_changes > 0:
+                        msg = Message('Se han actualizado sus datos', sender = app.config['MAIL_USERNAME'], recipients = [email])
+                        msg.body = f"Sus datos han sido actualizos por favor revise la pagina."
+                        mail.send(msg)
+
                         flash("Actualizado con exito","info")
                         return redirect(f"/dashboard/{cedula}")
                     else:
@@ -480,7 +488,7 @@ def solicitud():
                     sexo = escape(request.form["sexo"])
                     cometarios = escape(request.form["comentarios"])
                     msg = Message('Peticion de actualizacion de datos', sender = app.config['MAIL_USERNAME'], recipients = [usuario["registrador"]])
-                    msg.body = f"Nombre: {nombre} Apellido: {apellido} Edad: {edad}\nNacimiento: {nacimiento} Email: {email} Celular: {celular}\nCedula: {cedula} Dirección: {direccion} Estado civil: {estado_civil}\nSexo: {sexo}\n\nComentarios:\n{cometarios}"
+                    msg.body = f"Nombre: {nombre}\nApellido: {apellido}\nEdad: {edad}\nNacimiento: {nacimiento}\nEmail: {email}\nCelular: {celular}\nCedula: {cedula}\nDirección: {direccion}\nEstado civil: {estado_civil}\nSexo: {sexo}\n\nComentarios:\n{cometarios}"
                     mail.send(msg)
                     flash("Mensaje enviado con exito","info")
                     return redirect("/empleado")
@@ -608,7 +616,7 @@ def recuperar():
                         con.commit()
                         if con.total_changes > 0:
                             msg = Message('Cambio de contraseña', sender = app.config['MAIL_USERNAME'], recipients = [usuario["email"]])
-                            msg.body = f"Por favor ingresa al siguiente link para recuperar tu contraseña:\nhttp://127.0.0.1:5000/restablecer/{token}"
+                            msg.body = f"Por favor ingresa al siguiente link para recuperar tu contraseña:\n{DOMAIN}restablecer/{token}"
                             mail.send(msg)
                             flash("Revisa tu correo para recuperar tu contraseña","info")
                         return redirect("/")

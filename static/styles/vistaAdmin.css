@@ -63,14 +63,13 @@ input:focus {
     height: 80%;
     display: flex;
     flex-direction: column;
-    /* align-items: center; */
+    align-items: center;
     overflow-y: scroll;
 }
 
 #tabla li{
-    width: 100%;
+    width: 80%;
     height: 4.2rem;
-    /* padding: 0rem; */
     margin-top: 0.8rem;
 }
 
@@ -153,7 +152,7 @@ input:focus {
 .user__info p + p{
     font-size: 1.4em;
     font-weight: 400;
-    margin-top: -10px;
+    margin-top: -7px;
 }
 
 .buttons  {
