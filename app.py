@@ -13,7 +13,7 @@ from markupsafe import escape
 from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import redirect, secure_filename
 
-DOMAIN = 'https://josecuervo.herokuapp.com/'
+DOMAIN = 'https://www.pythonanywhere.com/'
 UPLOAD_FOLDER = 'static\profile'
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg'}
 
@@ -50,7 +50,7 @@ def login():
 
         if request.method == "POST":
             usuario = escape(request.form["form-usuario"])
-            contraseña = escape(request.form["form-contraseña"])
+            password = escape(request.form["form-contraseña"])
 
             try:
                 with sqlite3.connect('joseCuervoDB.db') as con:
@@ -62,7 +62,7 @@ def login():
                         return render_template("login.html")
                     else:
                         clavehash = row[0]
-                        if check_password_hash(clavehash,contraseña):
+                        if check_password_hash(clavehash,password):
                             session["usuario"] = usuario 
                             session["rol"] = row[1]
                             session["nombre"] = row[2]
@@ -92,20 +92,20 @@ def restablecer():
             return render_template("restablecer.html")
 
         if request.method == "POST":
-            contraseña = escape(request.form["contraseña"])
-            confirmar_contraseña = escape(request.form["confirmar_contraseña"])
-            print(contraseña)
-            if contraseña.strip() == "" or confirmar_contraseña.strip() == "":
+            password = escape(request.form["contraseña"])
+            confirm_password = escape(request.form["confirmar_contraseña"])
+            print(password)
+            if password.strip() == "" or confirm_password.strip() == "":
                 flash("Campos vacios","error")
-            elif contraseña.find(' ') > -1 or confirmar_contraseña.find(' ') > -1:
+            elif password.find(' ') > -1 or confirm_password.find(' ') > -1:
                 flash("Los campos no pueden tener espacios","error")
-            elif contraseña == confirmar_contraseña:
-                contraseña_hash = generate_password_hash(contraseña)
+            elif password == confirm_password:
+                password_hash = generate_password_hash(password)
                 try:
                     with sqlite3.connect('joseCuervoDB.db') as con:
                         con.row_factory = sqlite3.Row 
                         cur = con.cursor()
-                        cur.execute("UPDATE usuario SET contraseña=? WHERE CC=?" ,[contraseña_hash,str(session["usuario"])])
+                        cur.execute("UPDATE usuario SET contraseña=? WHERE CC=?" ,[password_hash,str(session["usuario"])])
                         con.commit()
                         if con.total_changes > 0:
                             msg = Message('Cambio de contraseña', sender = app.config['MAIL_USERNAME'], recipients = [session["email"]])
@@ -636,15 +636,15 @@ def olvidada(token):
         return render_template("restablecer.html")
 
     if request.method == "POST":
-        contraseña = escape(request.form["contraseña"])
-        confirmar_contraseña = escape(request.form["confirmar_contraseña"])
-        print(contraseña)
-        if contraseña.strip() == "" or confirmar_contraseña.strip() == "":
+        password = escape(request.form["contraseña"])
+        password_hash = escape(request.form["confirmar_contraseña"])
+        print(password_hash)
+        if password.strip() == "" or password_hash.strip() == "":
             flash("Campos vacios","error")
-        elif contraseña.find(' ') > -1 or confirmar_contraseña.find(' ') > -1:
+        elif password.find(' ') > -1 or password_hash.find(' ') > -1:
             flash("Los campos no pueden tener espacios","error")
-        elif contraseña == confirmar_contraseña:
-            contraseña_hash = generate_password_hash(contraseña)
+        elif password == password_hash:
+            password_hash = generate_password_hash(password)
             user = token.split("-")[5]
             try:
                 with sqlite3.connect('joseCuervoDB.db') as con:
@@ -657,7 +657,7 @@ def olvidada(token):
                         flash("Ocurrio un error","error")
                         return redirect("/")
                     else:
-                        cur.execute("UPDATE usuario SET contraseña=?, token=? WHERE CC=? AND token=?" ,[contraseña_hash,"",str(user),token])
+                        cur.execute("UPDATE usuario SET contraseña=?, token=? WHERE CC=? AND token=?" ,[password_hash,"",str(user),token])
                         con.commit()
                         if con.total_changes > 0:
                             msg = Message('Cambio de contraseña', sender = app.config['MAIL_USERNAME'], recipients = [usuario["email"]])
